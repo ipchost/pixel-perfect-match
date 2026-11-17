@@ -210,10 +210,12 @@ function parseShadowsocks(raw: string): ParseResult {
   if (!secret) return { ok: false, reason: "missing_secret", raw };
   const m = hostport.match(/^\[?([^\]]+?)\]?:(\d+)$/);
   if (!m) return { ok: false, reason: "missing_host", raw };
+  const host = m[1];
   const port = Number(m[2]);
+  if (!host) return { ok: false, reason: "missing_host", raw };
   if (!validPort(port)) return { ok: false, reason: "invalid_port", raw };
-  const config: ServerConfig = { protocol: "shadowsocks", address: m[1], port, secret, method };
-  return { ok: true, raw, value: { config, name: name || m[1] } };
+  const config: ServerConfig = { protocol: "shadowsocks", address: host, port, secret, method };
+  return { ok: true, raw, value: { config, name: name || host } };
 }
 
 export function detectProtocol(line: string): Protocol | null {

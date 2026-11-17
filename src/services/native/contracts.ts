@@ -36,19 +36,19 @@ export interface ConnectionManager {
   requestPermission(): Promise<VpnPermissionState>;
   connect(opts: ConnectOptions): Promise<void>;
   disconnect(): Promise<void>;
-  onPhase(cb: (phase: ConnectionPhase, detail?: { errorCode?: string }) => void): Unsubscribe | undefined;
+  onPhase(cb: (phase: ConnectionPhase, detail?: { errorCode?: string }) => void): Unsubscribe;
   onTraffic(cb: (s: TrafficSample & { bytesDown: number; bytesUp: number }) => void): Unsubscribe;
 }
 
 /** Отдельный adapter над Xray-core (libXray / AndroidLibXrayLite). */
 export interface XrayEngine {
   version(): Promise<string | null>;
-  validateConfig(json: string): Promise<{ ok: boolean; error?: string }> | undefined;
+  validateConfig(json: string): Promise<{ ok: boolean; error?: string }>;
   health(): Promise<ComponentHealth>;
 }
 
 export interface ServerScanner {
-  probe(server: Server, opts: ScanOptions, signal?: AbortSignal): Promise<ProbeResult> | undefined;
+  probe(server: Server, opts: ScanOptions, signal?: AbortSignal): Promise<ProbeResult>;
 }
 
 /** Android PackageManager. Список НЕ отправляется на backend. */

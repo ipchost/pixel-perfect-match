@@ -40,6 +40,7 @@ export function guessCountry(name: string): string {
     if (lower.includes(c.nameEn.toLowerCase()) || lower.includes(c.nameRu.toLowerCase())) return c.code;
   }
   const m = name.match(/\b([A-Z]{2})\b/);
-  if (m && byCode.has(m[1])) return m[1];
+  const code = m?.[1];
+  if (code && byCode.has(code)) return code;
   return "XX";
 }

@@ -86,6 +86,7 @@ export async function runScan(
   const worker = async () => {
     while (cursor < unique.length && !signal.aborted) {
       const server = unique[cursor++];
+      if (!server) break;
       const timeoutCtrl = new AbortController();
       const timer = setTimeout(() => timeoutCtrl.abort(), options.timeoutMs);
       const onAbort = () => timeoutCtrl.abort();
