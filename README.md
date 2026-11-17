@@ -1,29 +1,28 @@
-# Welcome to your Lovable project
+# SWIT4 — VPN-клиент (веб-прототип)
 
-This project was built with [Lovable](https://lovable.dev).
+SWIT4 — премиальный VPN-клиент для Android. Этот репозиторий — интерактивный **frontend-прототип** и спецификация для нативной разработки.
 
-## Build with Lovable
+> В браузере VPN-туннель **не создаётся**. Измерения, приложения устройства и соединение работают через demo bridge и помечены **DEMO**.
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+## Стек
+React 19 · TypeScript (strict) · TanStack Start/Router · Vite 7 · Tailwind CSS 4 · Zustand (persist → localStorage) · React Query · Framer Motion · Lucide · qrcode.react · Vitest.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+## Запуск
+```bash
+bun install
+bun run dev        # http://localhost:8080
+bunx vitest run    # unit-тесты
+bunx eslint src    # lint
 ```
 
-## Built with
+## Что работает в прототипе
+- Onboarding, главная с анимированной кнопкой подключения (DEMO), авто/ручной выбор сервера.
+- Каталог серверов по странам, страница страны, детали сервера, избранное, сравнение.
+- «Найти рабочие серверы»: получение → нормализация/дедупликация → валидация → проверка с ограниченной параллельностью, тайм-аутами и отменой; результаты по группам и подключение к выбранному.
+- Подписки: URL (с SSRF-валидацией), вставка URI/base64, TXT-файл, буфер обмена; история изменений, ошибки строк, автообновление.
+- Экспорт: копирование URI, TXT, JSON (Xray outbound), QR, Web Share, экспорт выбранных и всей подписки — с предупреждением о секретах.
+- Правила: белый/чёрный список (demo-приложения), домены/IP/CIDR с приоритетами и конфликтами, режим ограниченной связи.
+- Статистика, диагностика (реальные DNS/IPv4/IPv6-запросы браузера + отчёт без секретов), журнал событий, настройки, резервная копия.
+- Тёмная, светлая и системная темы; RU/EN; уменьшение движения.
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+Документы: [ARCHITECTURE](ARCHITECTURE.md) · [ANDROID_INTEGRATION](ANDROID_INTEGRATION.md) · [API_SPEC](API_SPEC.md) · [THIRD_PARTY_LICENSES](THIRD_PARTY_LICENSES.md) · [QA_CHECKLIST](QA_CHECKLIST.md).

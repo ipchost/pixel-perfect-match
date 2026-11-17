@@ -10,33 +10,320 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as CompareRouteImport } from './routes/compare'
+import { Route as DiagnosticsRouteImport } from './routes/diagnostics'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as RulesRouteImport } from './routes/rules'
+import { Route as ScanRouteImport } from './routes/scan'
+import { Route as ServersRouteImport } from './routes/servers'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as StatisticsRouteImport } from './routes/statistics'
+import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
+import { Route as RulesIndexRouteImport } from './routes/rules.index'
+import { Route as RulesAppsRouteImport } from './routes/rules.apps'
+import { Route as RulesBlacklistRouteImport } from './routes/rules.blacklist'
+import { Route as RulesDomainsRouteImport } from './routes/rules.domains'
+import { Route as RulesLimitedRouteImport } from './routes/rules.limited'
+import { Route as RulesWhitelistRouteImport } from './routes/rules.whitelist'
+import { Route as ServerIdRouteImport } from './routes/server.$id'
+import { Route as ServersIndexRouteImport } from './routes/servers.index'
+import { Route as ServersCountryRouteImport } from './routes/servers.$country'
+import { Route as SubscriptionsIndexRouteImport } from './routes/subscriptions.index'
+import { Route as SubscriptionsIdRouteImport } from './routes/subscriptions.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiagnosticsRoute = DiagnosticsRouteImport.update({
+  id: '/diagnostics',
+  path: '/diagnostics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RulesRoute = RulesRouteImport.update({
+  id: '/rules',
+  path: '/rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScanRoute = ScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServersRoute = ServersRouteImport.update({
+  id: '/servers',
+  path: '/servers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatisticsRoute = StatisticsRouteImport.update({
+  id: '/statistics',
+  path: '/statistics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscriptionsRoute = SubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RulesIndexRoute = RulesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RulesRoute,
+} as any)
+const RulesAppsRoute = RulesAppsRouteImport.update({
+  id: '/apps',
+  path: '/apps',
+  getParentRoute: () => RulesRoute,
+} as any)
+const RulesBlacklistRoute = RulesBlacklistRouteImport.update({
+  id: '/blacklist',
+  path: '/blacklist',
+  getParentRoute: () => RulesRoute,
+} as any)
+const RulesDomainsRoute = RulesDomainsRouteImport.update({
+  id: '/domains',
+  path: '/domains',
+  getParentRoute: () => RulesRoute,
+} as any)
+const RulesLimitedRoute = RulesLimitedRouteImport.update({
+  id: '/limited',
+  path: '/limited',
+  getParentRoute: () => RulesRoute,
+} as any)
+const RulesWhitelistRoute = RulesWhitelistRouteImport.update({
+  id: '/whitelist',
+  path: '/whitelist',
+  getParentRoute: () => RulesRoute,
+} as any)
+const ServerIdRoute = ServerIdRouteImport.update({
+  id: '/server/$id',
+  path: '/server/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServersIndexRoute = ServersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ServersRoute,
+} as any)
+const ServersCountryRoute = ServersCountryRouteImport.update({
+  id: '/$country',
+  path: '/$country',
+  getParentRoute: () => ServersRoute,
+} as any)
+const SubscriptionsIndexRoute = SubscriptionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SubscriptionsRoute,
+} as any)
+const SubscriptionsIdRoute = SubscriptionsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => SubscriptionsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/compare': typeof CompareRoute
+  '/diagnostics': typeof DiagnosticsRoute
+  '/events': typeof EventsRoute
+  '/favorites': typeof FavoritesRoute
+  '/onboarding': typeof OnboardingRoute
+  '/rules': typeof RulesRouteWithChildren
+  '/scan': typeof ScanRoute
+  '/servers': typeof ServersRouteWithChildren
+  '/settings': typeof SettingsRoute
+  '/statistics': typeof StatisticsRoute
+  '/subscriptions': typeof SubscriptionsRouteWithChildren
+  '/rules/apps': typeof RulesAppsRoute
+  '/rules/blacklist': typeof RulesBlacklistRoute
+  '/rules/domains': typeof RulesDomainsRoute
+  '/rules/limited': typeof RulesLimitedRoute
+  '/rules/whitelist': typeof RulesWhitelistRoute
+  '/server/$id': typeof ServerIdRoute
+  '/servers/$country': typeof ServersCountryRoute
+  '/subscriptions/$id': typeof SubscriptionsIdRoute
+  '/rules/': typeof RulesIndexRoute
+  '/servers/': typeof ServersIndexRoute
+  '/subscriptions/': typeof SubscriptionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/compare': typeof CompareRoute
+  '/diagnostics': typeof DiagnosticsRoute
+  '/events': typeof EventsRoute
+  '/favorites': typeof FavoritesRoute
+  '/onboarding': typeof OnboardingRoute
+  '/scan': typeof ScanRoute
+  '/settings': typeof SettingsRoute
+  '/statistics': typeof StatisticsRoute
+  '/rules/apps': typeof RulesAppsRoute
+  '/rules/blacklist': typeof RulesBlacklistRoute
+  '/rules/domains': typeof RulesDomainsRoute
+  '/rules/limited': typeof RulesLimitedRoute
+  '/rules/whitelist': typeof RulesWhitelistRoute
+  '/server/$id': typeof ServerIdRoute
+  '/servers/$country': typeof ServersCountryRoute
+  '/subscriptions/$id': typeof SubscriptionsIdRoute
+  '/rules': typeof RulesIndexRoute
+  '/servers': typeof ServersIndexRoute
+  '/subscriptions': typeof SubscriptionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/compare': typeof CompareRoute
+  '/diagnostics': typeof DiagnosticsRoute
+  '/events': typeof EventsRoute
+  '/favorites': typeof FavoritesRoute
+  '/onboarding': typeof OnboardingRoute
+  '/rules': typeof RulesRouteWithChildren
+  '/scan': typeof ScanRoute
+  '/servers': typeof ServersRouteWithChildren
+  '/settings': typeof SettingsRoute
+  '/statistics': typeof StatisticsRoute
+  '/subscriptions': typeof SubscriptionsRouteWithChildren
+  '/rules/apps': typeof RulesAppsRoute
+  '/rules/blacklist': typeof RulesBlacklistRoute
+  '/rules/domains': typeof RulesDomainsRoute
+  '/rules/limited': typeof RulesLimitedRoute
+  '/rules/whitelist': typeof RulesWhitelistRoute
+  '/server/$id': typeof ServerIdRoute
+  '/servers/$country': typeof ServersCountryRoute
+  '/subscriptions/$id': typeof SubscriptionsIdRoute
+  '/rules/': typeof RulesIndexRoute
+  '/servers/': typeof ServersIndexRoute
+  '/subscriptions/': typeof SubscriptionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/compare'
+    | '/diagnostics'
+    | '/events'
+    | '/favorites'
+    | '/onboarding'
+    | '/rules'
+    | '/scan'
+    | '/servers'
+    | '/settings'
+    | '/statistics'
+    | '/subscriptions'
+    | '/rules/apps'
+    | '/rules/blacklist'
+    | '/rules/domains'
+    | '/rules/limited'
+    | '/rules/whitelist'
+    | '/server/$id'
+    | '/servers/$country'
+    | '/subscriptions/$id'
+    | '/rules/'
+    | '/servers/'
+    | '/subscriptions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/compare'
+    | '/diagnostics'
+    | '/events'
+    | '/favorites'
+    | '/onboarding'
+    | '/scan'
+    | '/settings'
+    | '/statistics'
+    | '/rules/apps'
+    | '/rules/blacklist'
+    | '/rules/domains'
+    | '/rules/limited'
+    | '/rules/whitelist'
+    | '/server/$id'
+    | '/servers/$country'
+    | '/subscriptions/$id'
+    | '/rules'
+    | '/servers'
+    | '/subscriptions'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/compare'
+    | '/diagnostics'
+    | '/events'
+    | '/favorites'
+    | '/onboarding'
+    | '/rules'
+    | '/scan'
+    | '/servers'
+    | '/settings'
+    | '/statistics'
+    | '/subscriptions'
+    | '/rules/apps'
+    | '/rules/blacklist'
+    | '/rules/domains'
+    | '/rules/limited'
+    | '/rules/whitelist'
+    | '/server/$id'
+    | '/servers/$country'
+    | '/subscriptions/$id'
+    | '/rules/'
+    | '/servers/'
+    | '/subscriptions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  CompareRoute: typeof CompareRoute
+  DiagnosticsRoute: typeof DiagnosticsRoute
+  EventsRoute: typeof EventsRoute
+  FavoritesRoute: typeof FavoritesRoute
+  OnboardingRoute: typeof OnboardingRoute
+  RulesRoute: typeof RulesRouteWithChildren
+  ScanRoute: typeof ScanRoute
+  ServersRoute: typeof ServersRouteWithChildren
+  SettingsRoute: typeof SettingsRoute
+  StatisticsRoute: typeof StatisticsRoute
+  SubscriptionsRoute: typeof SubscriptionsRouteWithChildren
+  ServerIdRoute: typeof ServerIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +335,232 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diagnostics': {
+      id: '/diagnostics'
+      path: '/diagnostics'
+      fullPath: '/diagnostics'
+      preLoaderRoute: typeof DiagnosticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rules': {
+      id: '/rules'
+      path: '/rules'
+      fullPath: '/rules'
+      preLoaderRoute: typeof RulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scan': {
+      id: '/scan'
+      path: '/scan'
+      fullPath: '/scan'
+      preLoaderRoute: typeof ScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servers': {
+      id: '/servers'
+      path: '/servers'
+      fullPath: '/servers'
+      preLoaderRoute: typeof ServersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/statistics': {
+      id: '/statistics'
+      path: '/statistics'
+      fullPath: '/statistics'
+      preLoaderRoute: typeof StatisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscriptions': {
+      id: '/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/subscriptions'
+      preLoaderRoute: typeof SubscriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rules/': {
+      id: '/rules/'
+      path: '/'
+      fullPath: '/rules/'
+      preLoaderRoute: typeof RulesIndexRouteImport
+      parentRoute: typeof RulesRoute
+    }
+    '/rules/apps': {
+      id: '/rules/apps'
+      path: '/apps'
+      fullPath: '/rules/apps'
+      preLoaderRoute: typeof RulesAppsRouteImport
+      parentRoute: typeof RulesRoute
+    }
+    '/rules/blacklist': {
+      id: '/rules/blacklist'
+      path: '/blacklist'
+      fullPath: '/rules/blacklist'
+      preLoaderRoute: typeof RulesBlacklistRouteImport
+      parentRoute: typeof RulesRoute
+    }
+    '/rules/domains': {
+      id: '/rules/domains'
+      path: '/domains'
+      fullPath: '/rules/domains'
+      preLoaderRoute: typeof RulesDomainsRouteImport
+      parentRoute: typeof RulesRoute
+    }
+    '/rules/limited': {
+      id: '/rules/limited'
+      path: '/limited'
+      fullPath: '/rules/limited'
+      preLoaderRoute: typeof RulesLimitedRouteImport
+      parentRoute: typeof RulesRoute
+    }
+    '/rules/whitelist': {
+      id: '/rules/whitelist'
+      path: '/whitelist'
+      fullPath: '/rules/whitelist'
+      preLoaderRoute: typeof RulesWhitelistRouteImport
+      parentRoute: typeof RulesRoute
+    }
+    '/server/$id': {
+      id: '/server/$id'
+      path: '/server/$id'
+      fullPath: '/server/$id'
+      preLoaderRoute: typeof ServerIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servers/': {
+      id: '/servers/'
+      path: '/'
+      fullPath: '/servers/'
+      preLoaderRoute: typeof ServersIndexRouteImport
+      parentRoute: typeof ServersRoute
+    }
+    '/servers/$country': {
+      id: '/servers/$country'
+      path: '/$country'
+      fullPath: '/servers/$country'
+      preLoaderRoute: typeof ServersCountryRouteImport
+      parentRoute: typeof ServersRoute
+    }
+    '/subscriptions/': {
+      id: '/subscriptions/'
+      path: '/'
+      fullPath: '/subscriptions/'
+      preLoaderRoute: typeof SubscriptionsIndexRouteImport
+      parentRoute: typeof SubscriptionsRoute
+    }
+    '/subscriptions/$id': {
+      id: '/subscriptions/$id'
+      path: '/$id'
+      fullPath: '/subscriptions/$id'
+      preLoaderRoute: typeof SubscriptionsIdRouteImport
+      parentRoute: typeof SubscriptionsRoute
+    }
   }
 }
 
+interface RulesRouteChildren {
+  RulesAppsRoute: typeof RulesAppsRoute
+  RulesBlacklistRoute: typeof RulesBlacklistRoute
+  RulesDomainsRoute: typeof RulesDomainsRoute
+  RulesLimitedRoute: typeof RulesLimitedRoute
+  RulesWhitelistRoute: typeof RulesWhitelistRoute
+  RulesIndexRoute: typeof RulesIndexRoute
+}
+
+const RulesRouteChildren: RulesRouteChildren = {
+  RulesAppsRoute: RulesAppsRoute,
+  RulesBlacklistRoute: RulesBlacklistRoute,
+  RulesDomainsRoute: RulesDomainsRoute,
+  RulesLimitedRoute: RulesLimitedRoute,
+  RulesWhitelistRoute: RulesWhitelistRoute,
+  RulesIndexRoute: RulesIndexRoute,
+}
+
+const RulesRouteWithChildren = RulesRoute._addFileChildren(RulesRouteChildren)
+
+interface ServersRouteChildren {
+  ServersCountryRoute: typeof ServersCountryRoute
+  ServersIndexRoute: typeof ServersIndexRoute
+}
+
+const ServersRouteChildren: ServersRouteChildren = {
+  ServersCountryRoute: ServersCountryRoute,
+  ServersIndexRoute: ServersIndexRoute,
+}
+
+const ServersRouteWithChildren =
+  ServersRoute._addFileChildren(ServersRouteChildren)
+
+interface SubscriptionsRouteChildren {
+  SubscriptionsIdRoute: typeof SubscriptionsIdRoute
+  SubscriptionsIndexRoute: typeof SubscriptionsIndexRoute
+}
+
+const SubscriptionsRouteChildren: SubscriptionsRouteChildren = {
+  SubscriptionsIdRoute: SubscriptionsIdRoute,
+  SubscriptionsIndexRoute: SubscriptionsIndexRoute,
+}
+
+const SubscriptionsRouteWithChildren = SubscriptionsRoute._addFileChildren(
+  SubscriptionsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  CompareRoute: CompareRoute,
+  DiagnosticsRoute: DiagnosticsRoute,
+  EventsRoute: EventsRoute,
+  FavoritesRoute: FavoritesRoute,
+  OnboardingRoute: OnboardingRoute,
+  RulesRoute: RulesRouteWithChildren,
+  ScanRoute: ScanRoute,
+  ServersRoute: ServersRouteWithChildren,
+  SettingsRoute: SettingsRoute,
+  StatisticsRoute: StatisticsRoute,
+  SubscriptionsRoute: SubscriptionsRouteWithChildren,
+  ServerIdRoute: ServerIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

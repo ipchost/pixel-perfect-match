@@ -1,0 +1,26 @@
+export const ru = {
+  home: "Главная",
+  servers: "Серверы",
+  subscriptions: "Подписки",
+  rules: "Правила",
+  settings: "Настройки",
+  favorites: "Избранное",
+  statistics: "Статистика",
+  diagnostics: "Диагностика",
+  events: "События",
+  scan: "Сканирование",
+  mainNav: "Основная навигация",
+};
+export const en: typeof ru = {
+  home: "Home",
+  servers: "Servers",
+  subscriptions: "Subscriptions",
+  rules: "Rules",
+  settings: "Settings",
+  favorites: "Favorites",
+  statistics: "Statistics",
+  diagnostics: "Diagnostics",
+  events: "Events",
+  scan: "Scan",
+  mainNav: "Main navigation",
+};
