@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CompareRouteImport } from './routes/compare'
+import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as ScanRouteImport } from './routes/scan'
@@ -30,6 +32,16 @@ import { Route as SubscriptionsIdRouteImport } from './routes/subscriptions.$id'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -115,6 +127,8 @@ const SubscriptionsIdRoute = SubscriptionsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/compare': typeof CompareRoute
+  '/favorites': typeof FavoritesRoute
   '/onboarding': typeof OnboardingRoute
   '/rules': typeof RulesRouteWithChildren
   '/scan': typeof ScanRoute
@@ -134,6 +148,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/compare': typeof CompareRoute
+  '/favorites': typeof FavoritesRoute
   '/onboarding': typeof OnboardingRoute
   '/scan': typeof ScanRoute
   '/rules/apps': typeof RulesAppsRoute
@@ -151,6 +167,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/compare': typeof CompareRoute
+  '/favorites': typeof FavoritesRoute
   '/onboarding': typeof OnboardingRoute
   '/rules': typeof RulesRouteWithChildren
   '/scan': typeof ScanRoute
@@ -172,6 +190,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/compare'
+    | '/favorites'
     | '/onboarding'
     | '/rules'
     | '/scan'
@@ -191,6 +211,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/compare'
+    | '/favorites'
     | '/onboarding'
     | '/scan'
     | '/rules/apps'
@@ -207,6 +229,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/compare'
+    | '/favorites'
     | '/onboarding'
     | '/rules'
     | '/scan'
@@ -227,6 +251,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CompareRoute: typeof CompareRoute
+  FavoritesRoute: typeof FavoritesRoute
   OnboardingRoute: typeof OnboardingRoute
   RulesRoute: typeof RulesRouteWithChildren
   ScanRoute: typeof ScanRoute
@@ -242,6 +268,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -408,6 +448,8 @@ const SubscriptionsRouteWithChildren = SubscriptionsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CompareRoute: CompareRoute,
+  FavoritesRoute: FavoritesRoute,
   OnboardingRoute: OnboardingRoute,
   RulesRoute: RulesRouteWithChildren,
   ScanRoute: ScanRoute,
