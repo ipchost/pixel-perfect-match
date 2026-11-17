@@ -191,7 +191,7 @@ export async function addUrlSubscription(name: string, url: string, intervalMin:
   return sub;
 }
 
-async function fetchBody(url: string): Promise<string> {
+export async function fetchBody(url: string): Promise<string> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 12_000);
   try {
