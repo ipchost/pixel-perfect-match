@@ -19,7 +19,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     method: "proxy_handshake",
     onlyActiveSources: true,
     includeFavorites: true,
-    staleAfterMin: 120,
+    staleAfterMin: 30,
   },
   subscriptions: {
     autoUpdate: true,

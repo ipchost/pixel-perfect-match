@@ -1,0 +1,457 @@
+{
+  "product": "SWIT4",
+  "schema_version": "1.0",
+  "purpose": "Built-in source catalog for subscription import and server discovery",
+  "source_file": "sweet4_subscription_links.txt",
+  "declared_url_count": 66,
+  "actual_url_count": 66,
+  "source_group_count": 26,
+  "important_notice": [
+    "Список URL предоставлен пользователем. Доступность, безопасность, актуальность и содержимое URL не проверены.",
+    "Не классифицировать источник только по названию: WHITELIST/BLACKLIST могут обозначать разные типы содержимого.",
+    "Каждый источник сначала загрузить безопасным способом и определить фактический формат содержимого.",
+    "Источники с доменами/IP/CIDR/правилами маршрутизации не должны попадать в список VPN-серверов.",
+    "Все источники отключены по умолчанию до проверки и явного включения пользователем/владельцем продукта."
+  ],
+  "server_catalog_requirements": {
+    "pipeline": [
+      "Fetch enabled source with strict timeout, response-size limit, HTTPS validation and safe redirect handling.",
+      "Prevent SSRF: reject localhost, private, link-local, multicast and reserved destinations after DNS resolution and after every redirect; defend against DNS rebinding.",
+      "Use ETag and Last-Modified where available; apply per-host rate limits and backoff.",
+      "Detect content type and format. Parse only supported subscription formats such as VLESS, VMess, Trojan and Shadowsocks.",
+      "Classify domain/IP/CIDR routing lists separately from server subscriptions.",
+      "Normalize parsed nodes, preserve source provenance, deduplicate by canonicalized configuration fingerprint without logging secrets.",
+      "Resolve country/city from reliable endpoint IP geolocation when possible; do not infer country from source name or node remark alone. If unknown, show Unknown.",
+      "Test candidate nodes through the actual Xray engine or a valid protocol handshake. A TCP port-open check alone is not proof that a proxy works.",
+      "Only mark a node Working after a successful end-to-end proxy test to a controlled health-check endpoint.",
+      "Measure latency with a named method and timestamp. Measure download/upload only with a controlled, bandwidth-limited test endpoint.",
+      "Store last_checked_at, check_method, latency_ms, download_mbps, upload_mbps, status, failure_reason_code and source_ids.",
+      "Do not expose credentials or full subscription URIs in logs, analytics, crash reports or UI diagnostics."
+    ],
+    "visibility_policy": {
+      "default_server_filter": "working_only",
+      "hide_statuses": [
+        "unverified",
+        "untested",
+        "checking",
+        "unavailable",
+        "invalid",
+        "timeout",
+        "handshake_failed",
+        "stale"
+      ],
+      "allow_user_toggle_show_unavailable": true,
+      "never_label_stale_result_as_current": true,
+      "stale_after_minutes": 30,
+      "working_definition": "Только успешная end-to-end проверка через Xray/proxy handshake и контрольный health endpoint. Открытый TCP-порт сам по себе не означает Working."
+    },
+    "sorting": {
+      "country": "country_name_ascending_then_city_then_server_name",
+      "ping": "latency_ms_ascending_nulls_last",
+      "download": "download_mbps_descending_nulls_last",
+      "upload": "upload_mbps_descending_nulls_last",
+      "stability": "success_rate_descending_then_recent_failure_count_ascending",
+      "best": "working_only_then_stability_desc_then_latency_asc_then_download_desc"
+    },
+    "filters": [
+      "Country",
+      "City",
+      "Protocol",
+      "Working only (default ON)",
+      "Favorites",
+      "Source",
+      "Latency range",
+      "Minimum download speed",
+      "Minimum upload speed"
+    ],
+    "refresh": {
+      "target_interval_minutes": 30,
+      "note": "Backend scheduler target is every 30 minutes. Android WorkManager is best-effort and cannot guarantee exact 30-minute execution.",
+      "manual_refresh": true,
+      "cancel_scan": true,
+      "bounded_concurrency": true,
+      "bandwidth_test_opt_in": true
+    }
+  },
+  "sources": [
+    {
+      "id": "src-01",
+      "name": "RKP — WHITELIST https://hub.mos.ru/rkp/sub-roskompozor/raw/main/wl",
+      "urls": [
+        "https://hub.mos.ru/rkp/sub-roskompozor/raw/main/wl",
+        "https://raw.githubusercontent.com/rkp-community/sub/main/wl"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-02",
+      "name": "RKP — BLACKLIST https://hub.mos.ru/rkp/sub-roskompozor/raw/main/bl",
+      "urls": [
+        "https://hub.mos.ru/rkp/sub-roskompozor/raw/main/bl",
+        "https://raw.githubusercontent.com/rkp-community/sub/main/bl"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-03",
+      "name": "AetrisVPN",
+      "urls": [
+        "https://raw.githubusercontent.com/flaafix/AetrisVPN/main/AetrisVPN.txt",
+        "https://fastly.jsdelivr.net/gh/flaafix/AetrisVPN@main/AetrisVPN.txt",
+        "https://cdn.jsdelivr.net/gh/flaafix/AetrisVPN@main/AetrisVPN.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-04",
+      "name": "CYBERPORTAL — WHITE KEYS #42",
+      "urls": [
+        "https://raw.githubusercontent.com/NullCoreDeveloper/cyberportal-mirror/master/cp-042.txt",
+        "https://warp-gen.cyb-portal.org/CP-042"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-05",
+      "name": "CYBERPORTAL — BLACK MIX",
+      "urls": [
+        "https://raw.githubusercontent.com/NullCoreDeveloper/cyberportal-mirror/master/cp-001.txt",
+        "https://warp-gen.cyb-portal.org/CP-001"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-06",
+      "name": "igareck — BLACKLIST",
+      "urls": [
+        "https://gitlab.com/igareck/vpn-configs-for-russia/raw/main/BLACK_VLESS_RUS_mobile.txt",
+        "https://codeberg.org/igareck/vpn-configs-for-russia/raw/branch/main/BLACK_VLESS_RUS_mobile.txt",
+        "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-07",
+      "name": "WHITE-CIDR-RU",
+      "urls": [
+        "https://bitbucket.org/igareck/vpn-configs-for-russia/raw/main/WHITE-CIDR-RU-all.txt",
+        "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/WHITE-CIDR-RU-all.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-08",
+      "name": "ЭтоНеЯ — WHITELIST https://etoneya.su/whitelist",
+      "urls": [
+        "https://etoneya.su/whitelist",
+        "https://etoneya.best/whitelist",
+        "https://alley.serv00.net/whitelist",
+        "https://etoskam.ru/whitelist"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-09",
+      "name": "ЭтоНеЯ — YOUTUBE https://alley.serv00.net/youtube",
+      "urls": [
+        "https://alley.serv00.net/youtube",
+        "https://etoneya.su/youtube",
+        "https://etoneya.best/youtube",
+        "https://etoskam.ru/youtube"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-10",
+      "name": "rjsxrd — BYPASS ALL",
+      "urls": [
+        "https://raw.githubusercontent.com/whoahaow/rjsxrd/main/githubmirror/bypass/bypass-all.txt",
+        "https://fastly.jsdelivr.net/gh/whoahaow/rjsxrd@main/githubmirror/bypass/bypass-all.txt",
+        "https://cdn.jsdelivr.net/gh/whoahaow/rjsxrd@main/githubmirror/bypass/bypass-all.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-11",
+      "name": "VLESSFORU https://sub.vlessfo.ru/vlessforu/working_configs.txt",
+      "urls": [
+        "https://sub.vlessfo.ru/vlessforu/working_configs.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-12",
+      "name": "Бункер",
+      "urls": [
+        "https://hub.mos.ru/akelladejavu/bunker/-/raw/main/BLACK_LIST.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-13",
+      "name": "Generation-Liberty",
+      "urls": [
+        "https://raw.githubusercontent.com/gergew452/Generation-Liberty/main/githubmirror/best.txt",
+        "https://fastly.jsdelivr.net/gh/gergew452/Generation-Liberty@main/githubmirror/best.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-14",
+      "name": "PizdukVPN — MAIN",
+      "urls": [
+        "https://raw.githubusercontent.com/PizdukMod/PizdukVPN/main/sub",
+        "https://fastly.jsdelivr.net/gh/PizdukMod/PizdukVPN@main/sub"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-15",
+      "name": "PizdukVPN — WHITELIST",
+      "urls": [
+        "https://raw.githubusercontent.com/PizdukMod/PizdukVPN/main/wl",
+        "https://fastly.jsdelivr.net/gh/PizdukMod/PizdukVPN@main/wl"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-16",
+      "name": "kort0881 — RU BEST WHITE",
+      "urls": [
+        "https://raw.githubusercontent.com/kort0881/vpn-checker-backend/main/checked/RU_Best/ru_white_all_WHITE.txt",
+        "https://fastly.jsdelivr.net/gh/kort0881/vpn-checker-backend@main/checked/RU_Best/ru_white_all_WHITE.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-17",
+      "name": "FreeCFGHub",
+      "urls": [
+        "https://raw.githubusercontent.com/Ilyacom4ik/free-v2ray-2026/main/subscriptions/FreeCFGHub1.txt",
+        "https://fastly.jsdelivr.net/gh/Ilyacom4ik/free-v2ray-2026@main/subscriptions/FreeCFGHub1.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-18",
+      "name": "Luxxuria — NON-RU",
+      "urls": [
+        "https://raw.githubusercontent.com/luxxuria/harvester/main/non_ru.txt",
+        "https://fastly.jsdelivr.net/gh/luxxuria/harvester@main/non_ru.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-19",
+      "name": "AkresVPN — ALL",
+      "urls": [
+        "https://raw.githubusercontent.com/theakres/VPN/refs/heads/main/all"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-20",
+      "name": "Scarlet Devil — WHITELIST https://scarlet-devil.vercel.app/sub1",
+      "urls": [
+        "https://scarlet-devil.vercel.app/sub1",
+        "https://raw.githubusercontent.com/Areral/ScarletDevil/main/sub_bs.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-21",
+      "name": "Scarlet Devil — BLACKLIST https://scarlet-devil.vercel.app/sub2",
+      "urls": [
+        "https://scarlet-devil.vercel.app/sub2",
+        "https://raw.githubusercontent.com/Areral/ScarletDevil/main/sub_chs.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-22",
+      "name": "zieng2 — UNIVERSAL WHITELIST",
+      "urls": [
+        "https://gitverse.ru/api/repos/zieng2/wl/raw/branch/master/list_universal.txt",
+        "https://raw.githubusercontent.com/zieng2/wl/main/vless_universal.txt",
+        "https://fastly.jsdelivr.net/gh/zieng2/wl@main/vless_universal.txt",
+        "https://hub.mos.ru/zieng2/wl/raw/main/list_universal.txt",
+        "https://codeberg.org/zieng2/wl/raw/branch/main/vless_universal.txt",
+        "https://gitlab.com/zieng2/wl/raw/main/vless_universal.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-23",
+      "name": "КIЗЯК VPN — v7",
+      "urls": [
+        "https://raw.githubusercontent.com/Maskkost93/kizyak-vpn-4.0/main/kizyakbeta7.txt",
+        "https://fastly.jsdelivr.net/gh/Maskkost93/kizyak-vpn-4.0@main/kizyakbeta7.txt",
+        "https://cdn.jsdelivr.net/gh/Maskkost93/kizyak-vpn-4.0@main/kizyakbeta7.txt",
+        "https://raw.githubusercontent.com/Maskkost93/kizyak-vpn-4.0/refs/heads/main/kizyakbeta7.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-24",
+      "name": "КIЗЯК VPN — v6",
+      "urls": [
+        "https://raw.githubusercontent.com/Maskkost93/kizyak-vpn-4.0/main/kizyakbeta6.txt",
+        "https://fastly.jsdelivr.net/gh/Maskkost93/kizyak-vpn-4.0@main/kizyakbeta6.txt",
+        "https://cdn.jsdelivr.net/gh/Maskkost93/kizyak-vpn-4.0@main/kizyakbeta6.txt",
+        "https://raw.githubusercontent.com/Maskkost93/kizyak-vpn-4.0/refs/heads/main/kizyakbeta6.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-25",
+      "name": "КIЗЯК VPN — v6 BLACKLIST",
+      "urls": [
+        "https://raw.githubusercontent.com/Maskkost93/kizyak-vpn-4.0/main/kizyakbeta6BL.txt",
+        "https://fastly.jsdelivr.net/gh/Maskkost93/kizyak-vpn-4.0@main/kizyakbeta6BL.txt",
+        "https://raw.githubusercontent.com/Maskkost93/kizyak-vpn-4.0/refs/heads/main/kizyakbeta6BL.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    },
+    {
+      "id": "src-26",
+      "name": "КIЗЯК VPN — v8",
+      "urls": [
+        "https://raw.githubusercontent.com/Maskkost93/kizyak-vpn-4.0/main/kizyakbeta8.txt",
+        "https://fastly.jsdelivr.net/gh/Maskkost93/kizyak-vpn-4.0@main/kizyakbeta8.txt",
+        "https://raw.githubusercontent.com/Maskkost93/kizyak-vpn-4.0/refs/heads/main/kizyakbeta8.txt"
+      ],
+      "role_hint": "unclassified_pending_content_inspection",
+      "enabled_by_default": false,
+      "description": "Имя источника не является доказательством формата. Загрузить содержимое, определить фактический формат и классифицировать как серверную подписку, список маршрутизации (domain/IP/CIDR) или неподдерживаемый формат.",
+      "parser_policy": "auto_detect",
+      "fallback_policy": "try_next_mirror",
+      "trust": "unverified_public_source"
+    }
+  ]
+}
+
