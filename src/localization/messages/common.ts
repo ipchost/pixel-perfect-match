@@ -83,7 +83,8 @@ export const ru = {
   checkedAgo: (age: string) => `проверено ${age}`,
   missingFromSource: "Источник больше не содержит этот сервер",
   secretWarningTitle: "Это секретные данные",
-  secretWarning: "Ссылка или ключ дают доступ к серверу. Передавайте их только тем, кому доверяете. SWIT4 не отправляет конфигурации в аналитику и логи.",
+  secretWarning:
+    "Ссылка или ключ дают доступ к серверу. Передавайте их только тем, кому доверяете. SWIT4 не отправляет конфигурации в аналитику и логи.",
 };
 
 export const en: typeof ru = {
@@ -169,5 +170,6 @@ export const en: typeof ru = {
   checkedAgo: (age) => `checked ${age}`,
   missingFromSource: "The source no longer contains this server",
   secretWarningTitle: "This is sensitive data",
-  secretWarning: "The link or key grants access to the server. Share it only with people you trust. SWIT4 never sends configs to analytics or logs.",
+  secretWarning:
+    "The link or key grants access to the server. Share it only with people you trust. SWIT4 never sends configs to analytics or logs.",
 };

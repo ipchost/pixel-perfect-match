@@ -2,7 +2,16 @@ import { describe, expect, it } from "vitest";
 import { findConflicts, parsePackageList, parseRulesTxt, validateRuleValue } from "./logic";
 import type { DomainRule } from "@/types";
 
-const rule = (id: string, p: Partial<DomainRule>): DomainRule => ({ id, match: "domain", value: "a.com", action: "proxy", priority: 10, enabled: true, isDemo: false, ...p });
+const rule = (id: string, p: Partial<DomainRule>): DomainRule => ({
+  id,
+  match: "domain",
+  value: "a.com",
+  action: "proxy",
+  priority: 10,
+  enabled: true,
+  isDemo: false,
+  ...p,
+});
 
 describe("domain/IP rules", () => {
   it("validates CIDR and IPs", () => {
@@ -12,15 +21,23 @@ describe("domain/IP rules", () => {
     expect(validateRuleValue("domain_suffix", "youtube.com")).toBeNull();
   });
   it("detects same value with different actions", () => {
-    const c = findConflicts([rule("1", { action: "proxy" }), rule("2", { action: "direct", priority: 20 })]);
+    const c = findConflicts([
+      rule("1", { action: "proxy" }),
+      rule("2", { action: "direct", priority: 20 }),
+    ]);
     expect(c[0]?.reason).toBe("same_value_different_action");
   });
   it("detects a domain shadowed by an earlier suffix rule", () => {
-    const c = findConflicts([rule("1", { match: "domain_suffix", value: "google.com", action: "direct" }), rule("2", { value: "mail.google.com", priority: 20 })]);
+    const c = findConflicts([
+      rule("1", { match: "domain_suffix", value: "google.com", action: "direct" }),
+      rule("2", { value: "mail.google.com", priority: 20 }),
+    ]);
     expect(c[0]?.reason).toBe("shadowed_by_suffix");
   });
   it("ignores disabled rules", () => {
-    expect(findConflicts([rule("1", {}), rule("2", { enabled: false, action: "block" })])).toHaveLength(0);
+    expect(
+      findConflicts([rule("1", {}), rule("2", { enabled: false, action: "block" })]),
+    ).toHaveLength(0);
   });
   it("parses TXT rules", () => {
     const r = parseRulesTxt("# c\nblock domain ads.example.com\nexample.org\nbad value here\n");
@@ -32,7 +49,9 @@ describe("domain/IP rules", () => {
 
 describe("package list import", () => {
   it("keeps valid unique package names", () => {
-    const r = parsePackageList("org.telegram.messenger\norg.telegram.messenger\nnot a package\ncom.whatsapp");
+    const r = parsePackageList(
+      "org.telegram.messenger\norg.telegram.messenger\nnot a package\ncom.whatsapp",
+    );
     expect(r.packages).toEqual(["org.telegram.messenger", "com.whatsapp"]);
     expect(r.invalid).toBe(1);
   });

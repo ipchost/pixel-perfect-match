@@ -1,5 +1,10 @@
 import type { ConnectionPhase, TrafficSample } from "@/types";
-import type { ConnectionManager, DiagnosticsSnapshot, NativeBridge, VpnPermissionState } from "./contracts";
+import type {
+  ConnectionManager,
+  DiagnosticsSnapshot,
+  NativeBridge,
+  VpnPermissionState,
+} from "./contracts";
 import { createDemoApps } from "@/mocks/apps";
 import { DemoProbeAdapter } from "@/services/scanner/demo-adapter";
 
@@ -36,11 +41,15 @@ class DemoConnection implements ConnectionManager {
     this.timer = setInterval(() => {
       phase += 1;
       const burst = Math.sin(phase / 3) * 0.5 + 0.5;
-      const downBps = Math.round((180_000 + burst * 900_000 + Math.random() * 300_000) * (Math.random() > 0.9 ? 3 : 1));
+      const downBps = Math.round(
+        (180_000 + burst * 900_000 + Math.random() * 300_000) * (Math.random() > 0.9 ? 3 : 1),
+      );
       const upBps = Math.round(30_000 + burst * 120_000 + Math.random() * 40_000);
       this.down += downBps;
       this.up += upBps;
-      this.trafficCbs.forEach((cb) => cb({ t: Date.now(), downBps, upBps, bytesDown: this.down, bytesUp: this.up }));
+      this.trafficCbs.forEach((cb) =>
+        cb({ t: Date.now(), downBps, upBps, bytesDown: this.down, bytesUp: this.up }),
+      );
     }, 1000);
   }
   async disconnect() {
@@ -129,7 +138,8 @@ export function createDemoBridge(): NativeBridge {
       async validate(mode, packages) {
         const installed = new Set(createDemoApps().map((a) => a.packageName));
         const missing = packages.filter((p) => !installed.has(p));
-        if (mode === "whitelist" && packages.length === 0) return { ok: false, missing, reason: "empty_whitelist" };
+        if (mode === "whitelist" && packages.length === 0)
+          return { ok: false, missing, reason: "empty_whitelist" };
         return { ok: true, missing };
       },
       async applied() {
@@ -195,6 +205,7 @@ let bridge: NativeBridge | null = null;
 /** Возвращает нативный bridge, если он внедрён Android-приложением, иначе DEMO. */
 export function getBridge(): NativeBridge {
   if (bridge) return bridge;
-  bridge = typeof window !== "undefined" && window.SWIT4Native ? window.SWIT4Native : createDemoBridge();
+  bridge =
+    typeof window !== "undefined" && window.SWIT4Native ? window.SWIT4Native : createDemoBridge();
   return bridge;
 }

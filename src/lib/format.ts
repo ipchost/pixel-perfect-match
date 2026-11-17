@@ -14,7 +14,8 @@ export function formatBytes(bytes: number, locale = "ru"): string {
 /** bytes/s → строка в Мбит/с или Кбит/с */
 export function formatBps(bps: number, locale = "ru"): string {
   const bits = bps * 8;
-  if (bits >= 1_000_000) return `${(bits / 1_000_000).toLocaleString(locale, { maximumFractionDigits: 1 })} ${locale === "ru" ? "Мбит/с" : "Mbps"}`;
+  if (bits >= 1_000_000)
+    return `${(bits / 1_000_000).toLocaleString(locale, { maximumFractionDigits: 1 })} ${locale === "ru" ? "Мбит/с" : "Mbps"}`;
   return `${Math.round(bits / 1000).toLocaleString(locale)} ${locale === "ru" ? "Кбит/с" : "Kbps"}`;
 }
 
@@ -38,5 +39,10 @@ export function formatAge(iso: string | null, t: Messages, now = Date.now()): st
 }
 
 export function formatDateTime(iso: string, locale = "ru"): string {
-  return new Date(iso).toLocaleString(locale, { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+  return new Date(iso).toLocaleString(locale, {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }

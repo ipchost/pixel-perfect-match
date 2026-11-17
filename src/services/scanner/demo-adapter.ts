@@ -27,7 +27,15 @@ export class DemoProbeAdapter implements ProbeAdapter {
     const checkedAt = new Date().toISOString();
     const isDown = server.status === "unavailable" ? roll < 0.75 : roll < 0.12;
     if (isDown) {
-      return { latencyMs: null, method: opts.method, downloadMbps: null, uploadMbps: null, checkedAt, success: false, errorCode: roll < 0.06 ? "HANDSHAKE_FAILED" : "TIMEOUT" };
+      return {
+        latencyMs: null,
+        method: opts.method,
+        downloadMbps: null,
+        uploadMbps: null,
+        checkedAt,
+        success: false,
+        errorCode: roll < 0.06 ? "HANDSHAKE_FAILED" : "TIMEOUT",
+      };
     }
     const slow = server.status === "slow" || roll > 0.85;
     const latency = Math.round(slow ? 280 + rand() * 260 : 35 + rand() * 140);
@@ -38,6 +46,14 @@ export class DemoProbeAdapter implements ProbeAdapter {
       down = Math.round((slow ? 3 + rand() * 12 : 20 + rand() * 130) * 10) / 10;
       up = Math.round((slow ? 1 + rand() * 6 : 8 + rand() * 60) * 10) / 10;
     }
-    return { latencyMs: latency, method: opts.method, downloadMbps: down, uploadMbps: up, testBytesLimit: opts.runThroughput ? opts.throughputBytesLimit : undefined, checkedAt, success: true };
+    return {
+      latencyMs: latency,
+      method: opts.method,
+      downloadMbps: down,
+      uploadMbps: up,
+      testBytesLimit: opts.runThroughput ? opts.throughputBytesLimit : undefined,
+      checkedAt,
+      success: true,
+    };
   }
 }

@@ -7,7 +7,14 @@ import { Logo, LogoMark } from "@/components/swit4/Logo";
 import { DemoBadge } from "@/components/swit4/DemoBadge";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { resolvePermissionPrompt } from "@/services/connection/controller";
 import { useT } from "@/localization";
 import { useL } from "@/lib/i18n";
@@ -43,9 +50,13 @@ function PermissionDialog() {
           </DialogTitle>
           <DialogDescription>{t.home.permissionText}</DialogDescription>
         </DialogHeader>
-        <p className="rounded-xl bg-demo p-3 text-xs text-demo-foreground">{t.home.permissionWebNote}</p>
+        <p className="rounded-xl bg-demo p-3 text-xs text-demo-foreground">
+          {t.home.permissionWebNote}
+        </p>
         <DialogFooter>
-          <Button variant="surface" onClick={() => resolvePermissionPrompt(false)}>{t.common.cancel}</Button>
+          <Button variant="surface" onClick={() => resolvePermissionPrompt(false)}>
+            {t.common.cancel}
+          </Button>
           <Button onClick={() => resolvePermissionPrompt(true)}>{t.home.permissionAllow}</Button>
         </DialogFooter>
       </DialogContent>
@@ -111,14 +122,30 @@ export function AppShell({ children }: { children: ReactNode }) {
     <MotionConfig reducedMotion={reduced}>
       <div className="min-h-screen bg-background text-foreground md:flex">
         <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-border bg-surface/60 px-4 py-6 md:flex lg:w-72">
-          <Link to="/" className="mb-8 px-2"><Logo /></Link>
-          <nav aria-label={t.nav.mainNav} className="flex flex-1 flex-col gap-1 overflow-y-auto scrollbar-none">
+          <Link to="/" className="mb-8 px-2">
+            <Logo />
+          </Link>
+          <nav
+            aria-label={t.nav.mainNav}
+            className="flex flex-1 flex-col gap-1 overflow-y-auto scrollbar-none"
+          >
             {MAIN_NAV.map((n) => (
-              <SideLink key={n.to} item={n} active={isActive(pathname, n.to)} label={L(n.ru, n.en)} />
+              <SideLink
+                key={n.to}
+                item={n}
+                active={isActive(pathname, n.to)}
+                label={L(n.ru, n.en)}
+              />
             ))}
             <div className="my-3 h-px bg-border" />
             {EXTRA_NAV.map((n) => (
-              <SideLink key={n.to} item={n} active={isActive(pathname, n.to)} label={L(n.ru, n.en)} badge={n.to === "/events" && unread > 0 ? unread : undefined} />
+              <SideLink
+                key={n.to}
+                item={n}
+                active={isActive(pathname, n.to)}
+                label={L(n.ru, n.en)}
+                badge={n.to === "/events" && unread > 0 ? unread : undefined}
+              />
             ))}
           </nav>
           <div className="mt-4 flex items-start gap-2 rounded-2xl bg-demo p-3 text-[11px] leading-snug text-demo-foreground">
@@ -148,9 +175,17 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <Link
                     to={n.to}
                     aria-current={active ? "page" : undefined}
-                    className={cn("flex h-16 flex-col items-center justify-center gap-1 text-[10.5px] font-medium transition-colors", active ? "text-primary" : "text-muted-foreground")}
+                    className={cn(
+                      "flex h-16 flex-col items-center justify-center gap-1 text-[10.5px] font-medium transition-colors",
+                      active ? "text-primary" : "text-muted-foreground",
+                    )}
                   >
-                    <span className={cn("flex h-7 w-12 items-center justify-center rounded-full transition-colors", active && "bg-primary-soft")}>
+                    <span
+                      className={cn(
+                        "flex h-7 w-12 items-center justify-center rounded-full transition-colors",
+                        active && "bg-primary-soft",
+                      )}
+                    >
                       <Icon className="size-5" aria-hidden />
                     </span>
                     {L(n.ru, n.en)}
@@ -167,7 +202,17 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
 }
 
-function SideLink({ item, active, label, badge }: { item: (typeof MAIN_NAV)[number]; active: boolean; label: string; badge?: number | undefined }) {
+function SideLink({
+  item,
+  active,
+  label,
+  badge,
+}: {
+  item: (typeof MAIN_NAV)[number];
+  active: boolean;
+  label: string;
+  badge?: number | undefined;
+}) {
   const Icon = item.icon;
   return (
     <Link
@@ -175,12 +220,18 @@ function SideLink({ item, active, label, badge }: { item: (typeof MAIN_NAV)[numb
       aria-current={active ? "page" : undefined}
       className={cn(
         "flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors",
-        active ? "bg-primary-soft text-primary" : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",
+        active
+          ? "bg-primary-soft text-primary"
+          : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",
       )}
     >
       <Icon className="size-[18px]" aria-hidden />
       <span className="flex-1 truncate">{label}</span>
-      {badge !== undefined && <span className="rounded-full bg-signal px-1.5 text-[10px] font-semibold text-signal-foreground">{badge}</span>}
+      {badge !== undefined && (
+        <span className="rounded-full bg-signal px-1.5 text-[10px] font-semibold text-signal-foreground">
+          {badge}
+        </span>
+      )}
     </Link>
   );
 }

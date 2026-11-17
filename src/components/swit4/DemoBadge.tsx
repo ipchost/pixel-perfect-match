@@ -3,7 +3,13 @@ import { cn } from "@/lib/utils";
 import { useT } from "@/localization";
 
 /** Обязательная маркировка демо-данных. Показывать рядом с любыми DEMO-значениями. */
-export function DemoBadge({ className, withIcon = true }: { className?: string; withIcon?: boolean }) {
+export function DemoBadge({
+  className,
+  withIcon = true,
+}: {
+  className?: string;
+  withIcon?: boolean;
+}) {
   const t = useT();
   return (
     <span

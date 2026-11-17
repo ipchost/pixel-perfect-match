@@ -15,7 +15,15 @@ export function LogoMark({ className, title = "SWIT4" }: { className?: string; t
           <stop offset="1" stopColor="var(--signal)" />
         </linearGradient>
       </defs>
-      <rect x="1" y="1" width="30" height="30" rx="9" fill="var(--surface-2)" stroke="var(--border)" />
+      <rect
+        x="1"
+        y="1"
+        width="30"
+        height="30"
+        rx="9"
+        fill="var(--surface-2)"
+        stroke="var(--border)"
+      />
       <path
         d="M22.5 8H13.75a4 4 0 0 0 0 8h4.5a4 4 0 0 1 0 8H9.5"
         fill="none"
@@ -32,7 +40,12 @@ export function LogoMark({ className, title = "SWIT4" }: { className?: string; t
 
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <span className={cn("font-display text-[17px] font-semibold tracking-[0.06em] text-foreground", className)}>
+    <span
+      className={cn(
+        "font-display text-[17px] font-semibold tracking-[0.06em] text-foreground",
+        className,
+      )}
+    >
       SWIT<span className="text-primary">4</span>
     </span>
   );

@@ -17,10 +17,13 @@ export function displayUrl(sub: Subscription) {
   return isLocalSource(sub) ? sub.url.slice(LOCAL_SOURCE_PREFIX.length) : maskUrl(sub.url);
 }
 
-const PRIVATE_HOST = /^(localhost|127\.|10\.|192\.168\.|169\.254\.|0\.|::1$|\[::1\]|172\.(1[6-9]|2\d|3[01])\.)/i;
+const PRIVATE_HOST =
+  /^(localhost|127\.|10\.|192\.168\.|169\.254\.|0\.|::1$|\[::1\]|172\.(1[6-9]|2\d|3[01])\.)/i;
 
 /** Валидация URL подписки (клиентская часть SSRF-защиты; основная — на backend). */
-export function validateSubscriptionUrl(raw: string): { ok: true; url: string } | { ok: false; reason: string } {
+export function validateSubscriptionUrl(
+  raw: string,
+): { ok: true; url: string } | { ok: false; reason: string } {
   const value = raw.trim();
   if (!value) return { ok: false, reason: "empty" };
   let u: URL;
@@ -39,7 +42,11 @@ export function serverIdFor(key: string) {
   return `srv_${hashString(key).toString(36)}`;
 }
 
-function toServers(parsed: BatchParseResult, subscriptionId: string | null, rawByLine: Map<number, string>): Server[] {
+function toServers(
+  parsed: BatchParseResult,
+  subscriptionId: string | null,
+  rawByLine: Map<number, string>,
+): Server[] {
   return parsed.items.flatMap((item) => {
     if (!item.result.ok) return [];
     const { config, name } = item.result.value;
@@ -63,7 +70,13 @@ function toServers(parsed: BatchParseResult, subscriptionId: string | null, rawB
 }
 
 function lineErrors(parsed: BatchParseResult): SubscriptionLineError[] {
-  return parsed.errors.slice(0, 50).map((e) => ({ line: e.line, preview: maskSecrets(e.preview), reason: e.result.ok ? "" : e.result.reason }));
+  return parsed.errors
+    .slice(0, 50)
+    .map((e) => ({
+      line: e.line,
+      preview: maskSecrets(e.preview),
+      reason: e.result.ok ? "" : e.result.reason,
+    }));
 }
 
 export interface ImportOutcome {
@@ -89,16 +102,36 @@ export function importConfigs(text: string, subscriptionId: string | null): Impo
   // Сохраняем результаты проверок у существующих серверов.
   const merged = [...uniq.values()].map((s) => {
     const prev = st.servers.find((x) => x.id === s.id);
-    return prev ? { ...s, status: prev.status, lastProbe: prev.lastProbe, probeHistory: prev.probeHistory, excludedFromAuto: prev.excludedFromAuto, missingFromSource: undefined } : s;
+    return prev
+      ? {
+          ...s,
+          status: prev.status,
+          lastProbe: prev.lastProbe,
+          probeHistory: prev.probeHistory,
+          excludedFromAuto: prev.excludedFromAuto,
+          missingFromSource: undefined,
+        }
+      : s;
   });
   st.upsertServers(merged);
-  return { added, updated, duplicates: parsed.duplicates + (incoming.length - uniq.size), errors: lineErrors(parsed), total: uniq.size, wasBase64: parsed.wasBase64 };
+  return {
+    added,
+    updated,
+    duplicates: parsed.duplicates + (incoming.length - uniq.size),
+    errors: lineErrors(parsed),
+    total: uniq.size,
+    wasBase64: parsed.wasBase64,
+  };
 }
 
 function makeSubscription(name: string, url: string, intervalMin: number): Subscription {
   return {
     id: uid("sub"),
-    name: name.trim() || (url.startsWith(LOCAL_SOURCE_PREFIX) ? url.slice(LOCAL_SOURCE_PREFIX.length) : new URL(url).hostname),
+    name:
+      name.trim() ||
+      (url.startsWith(LOCAL_SOURCE_PREFIX)
+        ? url.slice(LOCAL_SOURCE_PREFIX.length)
+        : new URL(url).hostname),
     url,
     addedAt: new Date().toISOString(),
     lastUpdatedAt: null,
@@ -114,7 +147,10 @@ function makeSubscription(name: string, url: string, intervalMin: number): Subsc
 }
 
 /** Создаёт локальный источник из текста (TXT-файл, буфер обмена, ручной ввод). */
-export function importAsLocalSource(name: string, text: string): { sub: Subscription | null; outcome: ImportOutcome } {
+export function importAsLocalSource(
+  name: string,
+  text: string,
+): { sub: Subscription | null; outcome: ImportOutcome } {
   const sub = makeSubscription(name, `${LOCAL_SOURCE_PREFIX}${name.trim() || "import.txt"}`, 0);
   const outcome = importConfigs(text, sub.id);
   if (outcome.total === 0) return { sub: null, outcome };
@@ -125,16 +161,36 @@ export function importAsLocalSource(name: string, text: string): { sub: Subscrip
     lastUpdatedAt: new Date().toISOString(),
     status: "ok",
     errors: outcome.errors,
-    history: [{ at: new Date().toISOString(), added: outcome.added, removed: 0, total: outcome.total, isDemo: false }],
+    history: [
+      {
+        at: new Date().toISOString(),
+        added: outcome.added,
+        removed: 0,
+        total: outcome.total,
+        isDemo: false,
+      },
+    ],
   });
-  st.addEvent({ level: "success", category: "subscription", message: `Импортирован источник «${sub.name}»: ${outcome.total} конфигураций`, isDemo: false });
+  st.addEvent({
+    level: "success",
+    category: "subscription",
+    message: `Импортирован источник «${sub.name}»: ${outcome.total} конфигураций`,
+    isDemo: false,
+  });
   return { sub, outcome };
 }
 
 export async function addUrlSubscription(name: string, url: string, intervalMin: number) {
   const sub = makeSubscription(name, url, intervalMin);
   useAppStore.getState().addSubscription(sub);
-  useAppStore.getState().addEvent({ level: "info", category: "subscription", message: `Добавлена подписка «${sub.name}» (${maskUrl(url)})`, isDemo: false });
+  useAppStore
+    .getState()
+    .addEvent({
+      level: "info",
+      category: "subscription",
+      message: `Добавлена подписка «${sub.name}» (${maskUrl(url)})`,
+      isDemo: false,
+    });
   await refreshSubscription(sub.id);
   return sub;
 }
@@ -167,7 +223,9 @@ export async function refreshSubscription(id: string) {
   const sub = st.subscriptions.find((s) => s.id === id);
   if (!sub) return;
   if (isLocalSource(sub)) {
-    st.updateSubscription(id, { lastError: "Локальный источник: обновите повторным импортом файла" });
+    st.updateSubscription(id, {
+      lastError: "Локальный источник: обновите повторным импортом файла",
+    });
     return;
   }
   inFlight.add(id);
@@ -183,31 +241,68 @@ export async function refreshSubscription(id: string) {
         lastUpdatedAt: now,
         lastError: undefined,
         configCount: total,
-        history: [{ at: now, added: res.data.added, removed: res.data.removed, total, isDemo: true }, ...sub.history].slice(0, 30),
+        history: [
+          { at: now, added: res.data.added, removed: res.data.removed, total, isDemo: true },
+          ...sub.history,
+        ].slice(0, 30),
       });
-      useAppStore.getState().addEvent({ level: "success", category: "subscription", message: `Подписка «${sub.name}» обновлена (+${res.data.added} / −${res.data.removed})` });
+      useAppStore
+        .getState()
+        .addEvent({
+          level: "success",
+          category: "subscription",
+          message: `Подписка «${sub.name}» обновлена (+${res.data.added} / −${res.data.removed})`,
+        });
       return;
     }
     const body = await fetchBody(sub.url);
-    const before = new Set(useAppStore.getState().servers.filter((s) => s.subscriptionId === id).map((s) => s.id));
+    const before = new Set(
+      useAppStore
+        .getState()
+        .servers.filter((s) => s.subscriptionId === id)
+        .map((s) => s.id),
+    );
     const outcome = importConfigs(body, id);
     if (outcome.total === 0) throw new Error("NO_VALID_CONFIGS");
-    const after = new Set(useAppStore.getState().servers.filter((s) => s.subscriptionId === id).map((s) => s.id));
+    const after = new Set(
+      useAppStore
+        .getState()
+        .servers.filter((s) => s.subscriptionId === id)
+        .map((s) => s.id),
+    );
     // Удалённые из источника: избранные остаются с пометкой, остальные удаляются.
     const parsedIds = new Set(parseBatch(body).valid.map((v) => serverIdFor(dedupKey(v.config))));
     const gone = [...before].filter((x) => !parsedIds.has(x));
     const fav = new Set(useAppStore.getState().favorites);
     useAppStore.getState().removeServers(gone.filter((g) => !fav.has(g)));
-    gone.filter((g) => fav.has(g)).forEach((g) => useAppStore.getState().updateServer(g, { missingFromSource: true }));
+    gone
+      .filter((g) => fav.has(g))
+      .forEach((g) => useAppStore.getState().updateServer(g, { missingFromSource: true }));
     useAppStore.getState().updateSubscription(id, {
       status: "ok",
       lastUpdatedAt: now,
       lastError: undefined,
       configCount: after.size,
       errors: outcome.errors,
-      history: [{ at: now, added: outcome.added, removed: gone.length, total: outcome.total, isDemo: false }, ...sub.history].slice(0, 30),
+      history: [
+        {
+          at: now,
+          added: outcome.added,
+          removed: gone.length,
+          total: outcome.total,
+          isDemo: false,
+        },
+        ...sub.history,
+      ].slice(0, 30),
     });
-    useAppStore.getState().addEvent({ level: "success", category: "subscription", message: `Подписка «${sub.name}» обновлена: ${outcome.total} конфигураций`, isDemo: false });
+    useAppStore
+      .getState()
+      .addEvent({
+        level: "success",
+        category: "subscription",
+        message: `Подписка «${sub.name}» обновлена: ${outcome.total} конфигураций`,
+        isDemo: false,
+      });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     const human =
@@ -221,7 +316,14 @@ export async function refreshSubscription(id: string) {
               ? msg
               : "Браузер не смог загрузить источник (CORS или сеть). В Android-версии и через backend загрузка выполняется без этого ограничения. Используйте импорт TXT.";
     useAppStore.getState().updateSubscription(id, { status: "error", lastError: human });
-    useAppStore.getState().addEvent({ level: "error", category: "subscription", message: `Ошибка обновления «${sub.name}»: ${maskSecrets(human)}`, isDemo: sub.isDemo });
+    useAppStore
+      .getState()
+      .addEvent({
+        level: "error",
+        category: "subscription",
+        message: `Ошибка обновления «${sub.name}»: ${maskSecrets(human)}`,
+        isDemo: sub.isDemo,
+      });
   } finally {
     inFlight.delete(id);
   }
@@ -234,7 +336,8 @@ export function runAutoUpdateTick() {
   if (typeof navigator !== "undefined" && !navigator.onLine) return;
   const now = Date.now();
   st.subscriptions.forEach((s) => {
-    if (!s.enabled || isLocalSource(s) || s.status === "updating" || s.refreshIntervalMin <= 0) return;
+    if (!s.enabled || isLocalSource(s) || s.status === "updating" || s.refreshIntervalMin <= 0)
+      return;
     const last = s.lastUpdatedAt ? Date.parse(s.lastUpdatedAt) : 0;
     if (now - last >= s.refreshIntervalMin * 60_000) void refreshSubscription(s.id);
   });

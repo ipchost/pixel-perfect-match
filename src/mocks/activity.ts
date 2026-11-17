@@ -3,12 +3,38 @@ import { seeded } from "@/lib/random";
 
 export function createDemoEvents(now = Date.now()): AppEvent[] {
   const ago = (min: number) => new Date(now - min * 60_000).toISOString();
-  const e = (id: string, min: number, level: AppEvent["level"], category: AppEvent["category"], message: string, read = true): AppEvent => ({ id, at: ago(min), level, category, message, read, isDemo: true });
+  const e = (
+    id: string,
+    min: number,
+    level: AppEvent["level"],
+    category: AppEvent["category"],
+    message: string,
+    read = true,
+  ): AppEvent => ({ id, at: ago(min), level, category, message, read, isDemo: true });
   return [
-    e("ev_demo_1", 14, "success", "subscription", "Подписка «Основная подписка» обновлена: +1 сервер", false),
+    e(
+      "ev_demo_1",
+      14,
+      "success",
+      "subscription",
+      "Подписка «Основная подписка» обновлена: +1 сервер",
+      false,
+    ),
     e("ev_demo_2", 52, "info", "scan", "Сканирование завершено: 14 рабочих из 22", false),
-    e("ev_demo_3", 60 * 3, "error", "subscription", "«Резервный провайдер»: HTTP 429, следующая попытка через 30 мин"),
-    e("ev_demo_4", 60 * 5, "warning", "connection", "Потеря соединения с Frankfurt 02, переподключение"),
+    e(
+      "ev_demo_3",
+      60 * 3,
+      "error",
+      "subscription",
+      "«Резервный провайдер»: HTTP 429, следующая попытка через 30 мин",
+    ),
+    e(
+      "ev_demo_4",
+      60 * 5,
+      "warning",
+      "connection",
+      "Потеря соединения с Frankfurt 02, переподключение",
+    ),
     e("ev_demo_5", 60 * 5 + 1, "success", "connection", "Подключено: Amsterdam 01"),
     e("ev_demo_6", 60 * 26, "info", "update", "Доступна версия SWIT4 0.9.1 — см. журнал изменений"),
   ];
@@ -25,7 +51,15 @@ export function createDemoSessions(now = Date.now()): SessionRecord[] {
     ["srv_demo_05", "Amsterdam 01", "NL"],
     ["srv_demo_19", "Tokyo 01", "JP"],
   ];
-  const reasons: SessionRecord["endReason"][] = ["user", "user", "network_lost", "switched", "user", "error", "user"];
+  const reasons: SessionRecord["endReason"][] = [
+    "user",
+    "user",
+    "network_lost",
+    "switched",
+    "user",
+    "error",
+    "user",
+  ];
   let cursor = now - 40 * 60_000;
   return list.map(([serverId, serverName, countryCode], i) => {
     const dur = (20 + rand() * 160) * 60_000;

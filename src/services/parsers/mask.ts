@@ -4,7 +4,8 @@
  */
 const UUID_RE = /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi;
 const URI_RE = /\b(vless|vmess|trojan|ss):\/\/[^\s"'<>]+/gi;
-const QUERY_SECRET_RE = /([?&](?:token|key|password|pass|secret|uuid|auth|sig|signature|access_token)=)[^&\s#]+/gi;
+const QUERY_SECRET_RE =
+  /([?&](?:token|key|password|pass|secret|uuid|auth|sig|signature|access_token)=)[^&\s#]+/gi;
 const LONG_TOKEN_RE = /\b[A-Za-z0-9_-]{24,}\b/g;
 
 export function maskMiddle(value: string, keep = 3): string {

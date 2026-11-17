@@ -20,7 +20,13 @@ export const COUNTRIES: Country[] = [
 const byCode = new Map(COUNTRIES.map((c) => [c.code, c]));
 
 export function getCountry(code: string): Country {
-  return byCode.get(code.toUpperCase()) ?? { code: code.toUpperCase(), nameRu: code.toUpperCase(), nameEn: code.toUpperCase() };
+  return (
+    byCode.get(code.toUpperCase()) ?? {
+      code: code.toUpperCase(),
+      nameRu: code.toUpperCase(),
+      nameEn: code.toUpperCase(),
+    }
+  );
 }
 
 /** Эвристика определения страны по имени сервера/флагу-эмодзи. Возвращает "XX" если не найдено. */
@@ -37,7 +43,8 @@ export function guessCountry(name: string): string {
   }
   const lower = name.toLowerCase();
   for (const c of COUNTRIES) {
-    if (lower.includes(c.nameEn.toLowerCase()) || lower.includes(c.nameRu.toLowerCase())) return c.code;
+    if (lower.includes(c.nameEn.toLowerCase()) || lower.includes(c.nameRu.toLowerCase()))
+      return c.code;
   }
   const m = name.match(/\b([A-Z]{2})\b/);
   const code = m?.[1];

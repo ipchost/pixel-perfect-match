@@ -24,7 +24,11 @@ export function probeAgeMin(probe: ProbeResult | null, now = Date.now()): number
   return Math.max(0, Math.round((now - new Date(probe.checkedAt).getTime()) / 60_000));
 }
 
-export function isStale(probe: ProbeResult | null, staleAfterMin: number, now = Date.now()): boolean {
+export function isStale(
+  probe: ProbeResult | null,
+  staleAfterMin: number,
+  now = Date.now(),
+): boolean {
   const age = probeAgeMin(probe, now);
   return age === null ? false : age > staleAfterMin;
 }
@@ -40,14 +44,19 @@ export function scoreServer(server: Server, staleAfterMin = 120, now = Date.now(
   const latencyScore = Math.max(0, 1 - p.latencyMs / 600); // 0ms → 1, 600ms → 0
   const sr = successRate(server) ?? 0.5;
   const age = probeAgeMin(p, now) ?? 0;
-  const freshness = age <= staleAfterMin ? 1 : Math.max(0.2, 1 - (age - staleAfterMin) / (staleAfterMin * 4));
+  const freshness =
+    age <= staleAfterMin ? 1 : Math.max(0.2, 1 - (age - staleAfterMin) / (staleAfterMin * 4));
   const speedBonus = p.downloadMbps !== null ? Math.min(1, p.downloadMbps / 100) : 0.5;
   const score = (latencyScore * 0.45 + sr * 0.3 + speedBonus * 0.1 + freshness * 0.15) * 100;
   return Math.round(score);
 }
 
 /** Выбор лучшего сервера для режима Auto. Исключённые из автовыбора серверы пропускаются. */
-export function pickBestServer(servers: Server[], staleAfterMin = 120, now = Date.now()): Server | null {
+export function pickBestServer(
+  servers: Server[],
+  staleAfterMin = 120,
+  now = Date.now(),
+): Server | null {
   let best: Server | null = null;
   let bestScore = -1;
   for (const s of servers) {
@@ -62,7 +71,11 @@ export function pickBestServer(servers: Server[], staleAfterMin = 120, now = Dat
 }
 
 /** Защита от бесконечного цикла автопереключений. */
-export function canAutoSwitch(switchTimestamps: number[], maxPer10Min: number, now = Date.now()): boolean {
+export function canAutoSwitch(
+  switchTimestamps: number[],
+  maxPer10Min: number,
+  now = Date.now(),
+): boolean {
   const windowStart = now - 10 * 60_000;
   return switchTimestamps.filter((t) => t >= windowStart).length < maxPer10Min;
 }

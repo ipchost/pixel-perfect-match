@@ -14,9 +14,18 @@ export const Route = createFileRoute("/servers/$country")({
   head: ({ params }) => ({
     meta: [
       { title: `${getCountry(params.country.toUpperCase()).nameRu} — серверы SWIT4` },
-      { name: "description", content: `Серверы SWIT4 в стране ${getCountry(params.country.toUpperCase()).nameRu}, сгруппированные по городам.` },
-      { property: "og:title", content: `${getCountry(params.country.toUpperCase()).nameRu} — серверы SWIT4` },
-      { property: "og:description", content: "Серверы страны, сгруппированные по городам, с задержкой и статусом." },
+      {
+        name: "description",
+        content: `Серверы SWIT4 в стране ${getCountry(params.country.toUpperCase()).nameRu}, сгруппированные по городам.`,
+      },
+      {
+        property: "og:title",
+        content: `${getCountry(params.country.toUpperCase()).nameRu} — серверы SWIT4`,
+      },
+      {
+        property: "og:description",
+        content: "Серверы страны, сгруппированные по городам, с задержкой и статусом.",
+      },
     ],
   }),
   component: CountryPage,
@@ -29,21 +38,52 @@ function CountryPage() {
   const locale = useLocale();
   const all = useAppStore((s) => s.servers);
   const stale = useAppStore((s) => s.settings.scan.staleAfterMin);
-  const list = useMemo(() => sortServers(all.filter((s) => s.countryCode === code), "rating", stale), [all, code, stale]);
+  const list = useMemo(
+    () =>
+      sortServers(
+        all.filter((s) => s.countryCode === code),
+        "rating",
+        stale,
+      ),
+    [all, code, stale],
+  );
   const cities = useMemo(() => {
     const m = new Map<string, typeof list>();
-    list.forEach((s) => m.set(s.city || L("Без города", "No city"), [...(m.get(s.city || L("Без города", "No city")) ?? []), s]));
+    list.forEach((s) =>
+      m.set(s.city || L("Без города", "No city"), [
+        ...(m.get(s.city || L("Без города", "No city")) ?? []),
+        s,
+      ]),
+    );
     return [...m.entries()];
   }, [list, L]);
   const c = getCountry(code);
   return (
-    <Screen back="/servers" title={<span className="flex items-center gap-2.5"><Flag code={code} /> {locale === "en" ? c.nameEn : c.nameRu}</span>} subtitle={L(`${list.length} серверов, сортировка по рейтингу`, `${list.length} servers, sorted by rating`)}>
+    <Screen
+      back="/servers"
+      title={
+        <span className="flex items-center gap-2.5">
+          <Flag code={code} /> {locale === "en" ? c.nameEn : c.nameRu}
+        </span>
+      }
+      subtitle={L(
+        `${list.length} серверов, сортировка по рейтингу`,
+        `${list.length} servers, sorted by rating`,
+      )}
+    >
       {list.length === 0 ? (
-        <EmptyState kind="servers" title={L("Нет серверов в этой стране", "No servers in this country")} />
+        <EmptyState
+          kind="servers"
+          title={L("Нет серверов в этой стране", "No servers in this country")}
+        />
       ) : (
         cities.map(([city, servers]) => (
           <Section key={city} title={city}>
-            <ListCard>{servers.map((s) => <ServerRow key={s.id} server={s} />)}</ListCard>
+            <ListCard>
+              {servers.map((s) => (
+                <ServerRow key={s.id} server={s} />
+              ))}
+            </ListCard>
           </Section>
         ))
       )}

@@ -16,7 +16,16 @@ export function createHttpApi(baseUrl: string, timeoutMs = 10_000): Swit4Api {
       });
       if (!res.ok) {
         const retry = Number(res.headers.get("retry-after")) || undefined;
-        const code: ApiError["code"] = res.status === 429 ? "RATE_LIMITED" : res.status === 404 ? "NOT_FOUND" : res.status === 413 ? "TOO_LARGE" : res.status === 422 || res.status === 400 ? "VALIDATION" : "SERVER";
+        const code: ApiError["code"] =
+          res.status === 429
+            ? "RATE_LIMITED"
+            : res.status === 404
+              ? "NOT_FOUND"
+              : res.status === 413
+                ? "TOO_LARGE"
+                : res.status === 422 || res.status === 400
+                  ? "VALIDATION"
+                  : "SERVER";
         let message = `HTTP ${res.status}`;
         try {
           const j = (await res.json()) as { error?: { message?: string } };
@@ -29,7 +38,13 @@ export function createHttpApi(baseUrl: string, timeoutMs = 10_000): Swit4Api {
       return { ok: true, data: (await res.json()) as T };
     } catch (e) {
       const aborted = e instanceof DOMException && e.name === "AbortError";
-      return { ok: false, error: { code: aborted ? "TIMEOUT" : "NETWORK", message: aborted ? "Request timed out" : "Network error" } };
+      return {
+        ok: false,
+        error: {
+          code: aborted ? "TIMEOUT" : "NETWORK",
+          message: aborted ? "Request timed out" : "Network error",
+        },
+      };
     } finally {
       clearTimeout(timer);
     }
@@ -37,11 +52,16 @@ export function createHttpApi(baseUrl: string, timeoutMs = 10_000): Swit4Api {
 
   return {
     isDemo: false,
-    listServers: (p) => req("GET", `/servers${p ? `?${new URLSearchParams(Object.entries(p).filter(([, v]) => v) as [string, string][])}` : ""}`),
+    listServers: (p) =>
+      req(
+        "GET",
+        `/servers${p ? `?${new URLSearchParams(Object.entries(p).filter(([, v]) => v) as [string, string][])}` : ""}`,
+      ),
     listCountries: () => req("GET", "/countries"),
     listSubscriptions: () => req("GET", "/subscriptions"),
     createSubscription: (input) => req("POST", "/subscriptions", input),
-    updateSubscription: (id, patch) => req("PATCH", `/subscriptions/${encodeURIComponent(id)}`, patch),
+    updateSubscription: (id, patch) =>
+      req("PATCH", `/subscriptions/${encodeURIComponent(id)}`, patch),
     deleteSubscription: (id) => req("DELETE", `/subscriptions/${encodeURIComponent(id)}`),
     refreshSubscription: (id) => req("POST", `/subscriptions/${encodeURIComponent(id)}/refresh`),
     createScan: (input) => req("POST", "/scans", input),

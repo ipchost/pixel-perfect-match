@@ -18,16 +18,26 @@ export function groupByCountry(servers: Server[], locale: "ru" | "en" = "ru"): C
       c.push(s);
       cities.set(s.city, c);
     }
-    const latencies = list.map((s) => (s.lastProbe?.success ? s.lastProbe.latencyMs : null)).filter((v): v is number => v !== null);
+    const latencies = list
+      .map((s) => (s.lastProbe?.success ? s.lastProbe.latencyMs : null))
+      .filter((v): v is number => v !== null);
     groups.push({
       country: getCountry(code),
-      cities: [...cities.entries()].map(([city, servers]) => ({ city, servers: servers.sort((a, b) => a.name.localeCompare(b.name)) })),
+      cities: [...cities.entries()].map(([city, servers]) => ({
+        city,
+        servers: servers.sort((a, b) => a.name.localeCompare(b.name)),
+      })),
       total: list.length,
       available: list.filter((s) => AVAILABLE.has(s.status)).length,
       bestLatencyMs: latencies.length ? Math.min(...latencies) : null,
     });
   }
-  return groups.sort((a, b) => (locale === "ru" ? a.country.nameRu : a.country.nameEn).localeCompare(locale === "ru" ? b.country.nameRu : b.country.nameEn, locale));
+  return groups.sort((a, b) =>
+    (locale === "ru" ? a.country.nameRu : a.country.nameEn).localeCompare(
+      locale === "ru" ? b.country.nameRu : b.country.nameEn,
+      locale,
+    ),
+  );
 }
 
 export function isWorking(s: Server) {

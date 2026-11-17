@@ -21,7 +21,8 @@ export function validateRuleValue(match: RuleMatchType, raw: string): string | n
       if (extra !== undefined || !ip || bits === undefined) return "invalid_cidr";
       const n = Number(bits);
       if (IPV4_RE.test(ip)) return Number.isInteger(n) && n >= 0 && n <= 32 ? null : "invalid_cidr";
-      if (ip.includes(":") && IPV6_RE.test(ip)) return Number.isInteger(n) && n >= 0 && n <= 128 ? null : "invalid_cidr";
+      if (ip.includes(":") && IPV6_RE.test(ip))
+        return Number.isInteger(n) && n >= 0 && n <= 128 ? null : "invalid_cidr";
       return "invalid_cidr";
     }
   }
@@ -45,8 +46,17 @@ export function findConflicts(rules: DomainRule[]): RuleConflict[] {
       const a = active[i]!;
       const b = active[j]!;
       if (a.match === b.match && a.value === b.value) {
-        out.push({ ruleIds: [a.id, b.id], value: b.value, reason: a.action === b.action ? "duplicate" : "same_value_different_action" });
-      } else if (a.match === "domain_suffix" && (b.match === "domain" || b.match === "domain_suffix") && suffixCovers(a.value, b.value) && a.action !== b.action) {
+        out.push({
+          ruleIds: [a.id, b.id],
+          value: b.value,
+          reason: a.action === b.action ? "duplicate" : "same_value_different_action",
+        });
+      } else if (
+        a.match === "domain_suffix" &&
+        (b.match === "domain" || b.match === "domain_suffix") &&
+        suffixCovers(a.value, b.value) &&
+        a.action !== b.action
+      ) {
         out.push({ ruleIds: [a.id, b.id], value: b.value, reason: "shadowed_by_suffix" });
       }
     }
@@ -60,7 +70,10 @@ export function renumber(rules: DomainRule[]): DomainRule[] {
 }
 
 /** Импорт TXT: строки вида "proxy domain_suffix example.com" или просто "example.com" (proxy, suffix). */
-export function parseRulesTxt(text: string): { rules: Omit<DomainRule, "id" | "priority">[]; errors: number } {
+export function parseRulesTxt(text: string): {
+  rules: Omit<DomainRule, "id" | "priority">[];
+  errors: number;
+} {
   const rules: Omit<DomainRule, "id" | "priority">[] = [];
   let errors = 0;
   const actions = new Set(["proxy", "direct", "block"]);
@@ -83,13 +96,24 @@ export function parseRulesTxt(text: string): { rules: Omit<DomainRule, "id" | "p
       errors++;
       continue;
     }
-    rules.push({ match, value: normalizeValue(match, value), action, enabled: true, isDemo: false });
+    rules.push({
+      match,
+      value: normalizeValue(match, value),
+      action,
+      enabled: true,
+      isDemo: false,
+    });
   }
   return { rules, errors };
 }
 
 export function rulesToTxt(rules: DomainRule[]) {
-  return ["# SWIT4 routing rules: <action> <match> <value>", ...[...rules].sort((a, b) => a.priority - b.priority).map((r) => `${r.action} ${r.match} ${r.value}`)].join("\n");
+  return [
+    "# SWIT4 routing rules: <action> <match> <value>",
+    ...[...rules]
+      .sort((a, b) => a.priority - b.priority)
+      .map((r) => `${r.action} ${r.match} ${r.value}`),
+  ].join("\n");
 }
 
 /** Package names: по одному в строке, валидный Java-пакет. */

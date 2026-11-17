@@ -29,7 +29,13 @@ export const DEFAULT_SETTINGS: AppSettings = {
     maxResponseKb: 5120,
   },
   dns: { mode: "tunnel", customServers: ["1.1.1.1", "9.9.9.9"], ipMode: "ipv4" },
-  ui: { theme: "dark", locale: "ru", motion: "system", animationIntensity: "normal", compact: false },
+  ui: {
+    theme: "dark",
+    locale: "ru",
+    motion: "system",
+    animationIntensity: "normal",
+    compact: false,
+  },
   privacy: { appLock: false, clearClipboardAfterSec: 60, keepHistoryDays: 30 },
   killSwitchAcknowledged: false,
   onboardingDone: false,
@@ -46,5 +52,13 @@ export const DEFAULT_ROUTING: AppRoutingConfig = {
 export const INITIAL_CONNECTION: ConnectionState = {
   phase: "disconnected",
   serverId: null,
-  stats: { startedAt: null, bytesDown: 0, bytesUp: 0, downBps: 0, upBps: 0, samples: [], isDemo: true },
+  stats: {
+    startedAt: null,
+    bytesDown: 0,
+    bytesUp: 0,
+    downBps: 0,
+    upBps: 0,
+    samples: [],
+    isDemo: true,
+  },
 };

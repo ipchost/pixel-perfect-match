@@ -39,7 +39,8 @@ export const ru = {
   errorNoCandidates: "Нет проверенных рабочих серверов. Запустите поиск рабочих серверов.",
   errorGeneric: "Не удалось подключиться",
   permissionTitle: "Разрешение на VPN",
-  permissionText: "Android попросит разрешить SWIT4 создать VPN-подключение. Через туннель пойдёт трафик выбранных приложений. SWIT4 не собирает историю посещений.",
+  permissionText:
+    "Android попросит разрешить SWIT4 создать VPN-подключение. Через туннель пойдёт трафик выбранных приложений. SWIT4 не собирает историю посещений.",
   permissionWebNote: "В веб-прототипе системного диалога нет — разрешение симулируется (DEMO).",
   permissionAllow: "Продолжить",
   notifications: "События",
@@ -88,7 +89,8 @@ export const en: typeof ru = {
   errorNoCandidates: "No checked working servers. Run “Find working servers”.",
   errorGeneric: "Could not connect",
   permissionTitle: "VPN permission",
-  permissionText: "Android will ask you to allow SWIT4 to create a VPN connection. Traffic of the selected apps goes through the tunnel. SWIT4 does not collect browsing history.",
+  permissionText:
+    "Android will ask you to allow SWIT4 to create a VPN connection. Traffic of the selected apps goes through the tunnel. SWIT4 does not collect browsing history.",
   permissionWebNote: "The web prototype has no system dialog — permission is simulated (DEMO).",
   permissionAllow: "Continue",
   notifications: "Events",

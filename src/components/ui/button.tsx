@@ -20,7 +20,8 @@ const buttonVariants = cva(
         soft: "bg-primary-soft text-primary hover:bg-primary/20",
         signal: "bg-signal-soft text-signal border border-signal/25 hover:bg-signal/20",
         hero: "bg-primary text-primary-foreground shadow-glow hover:brightness-110 font-semibold",
-        danger: "bg-destructive/12 text-destructive border border-destructive/25 hover:bg-destructive/20",
+        danger:
+          "bg-destructive/12 text-destructive border border-destructive/25 hover:bg-destructive/20",
       },
       size: {
         default: "h-9 px-4 py-2",

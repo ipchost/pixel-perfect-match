@@ -1,11 +1,6 @@
 export type EventLevel = "info" | "success" | "warning" | "error";
 export type EventCategory =
-  | "connection"
-  | "subscription"
-  | "scan"
-  | "routing"
-  | "system"
-  | "update";
+  "connection" | "subscription" | "scan" | "routing" | "system" | "update";
 
 export interface AppEvent {
   id: string;

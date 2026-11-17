@@ -23,7 +23,10 @@ export function clampOptions(o: ScanOptions): ScanOptions {
     ...o,
     concurrency: Math.max(1, Math.min(SCAN_LIMITS.maxConcurrency, Math.round(o.concurrency))),
     timeoutMs: Math.max(SCAN_LIMITS.minTimeoutMs, Math.min(SCAN_LIMITS.maxTimeoutMs, o.timeoutMs)),
-    throughputBytesLimit: Math.max(0, Math.min(SCAN_LIMITS.maxThroughputBytes, o.throughputBytesLimit)),
+    throughputBytesLimit: Math.max(
+      0,
+      Math.min(SCAN_LIMITS.maxThroughputBytes, o.throughputBytesLimit),
+    ),
   };
 }
 

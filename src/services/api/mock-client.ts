@@ -26,7 +26,21 @@ export function createMockApi(): Swit4Api {
       const now = new Date().toISOString();
       return {
         ok: true,
-        data: { id: `sub_${Date.now().toString(36)}`, name: input.name, url: input.url, addedAt: now, lastUpdatedAt: null, refreshIntervalMin: input.refreshIntervalMin ?? 30, configCount: 0, availableCount: 0, status: "never_updated", enabled: true, errors: [], history: [], isDemo: true },
+        data: {
+          id: `sub_${Date.now().toString(36)}`,
+          name: input.name,
+          url: input.url,
+          addedAt: now,
+          lastUpdatedAt: null,
+          refreshIntervalMin: input.refreshIntervalMin ?? 30,
+          configCount: 0,
+          availableCount: 0,
+          status: "never_updated",
+          enabled: true,
+          errors: [],
+          history: [],
+          isDemo: true,
+        },
       };
     },
     async updateSubscription(id, patch) {
@@ -41,17 +55,30 @@ export function createMockApi(): Swit4Api {
     },
     async refreshSubscription(id) {
       await wait(900 + Math.random() * 600);
-      if (id === "sub_demo_alt" && Math.random() < 0.5) return { ok: false, error: { code: "RATE_LIMITED", message: "HTTP 429", retryAfterSec: 1800 } };
+      if (id === "sub_demo_alt" && Math.random() < 0.5)
+        return {
+          ok: false,
+          error: { code: "RATE_LIMITED", message: "HTTP 429", retryAfterSec: 1800 },
+        };
       const added = Math.random() < 0.4 ? Math.round(Math.random() * 2) : 0;
       const removed = Math.random() < 0.3 ? 1 : 0;
       return { ok: true, data: { added, removed, total: 0 } };
     },
     async createScan() {
       await wait(200);
-      return { ok: false, error: { code: "UNAVAILABLE", message: "Server-side scans require a backend (see API_SPEC.md)" } };
+      return {
+        ok: false,
+        error: {
+          code: "UNAVAILABLE",
+          message: "Server-side scans require a backend (see API_SPEC.md)",
+        },
+      };
     },
     async getScan() {
-      return { ok: false, error: { code: "UNAVAILABLE", message: "Server-side scans require a backend" } };
+      return {
+        ok: false,
+        error: { code: "UNAVAILABLE", message: "Server-side scans require a backend" },
+      };
     },
     async getAppVersion() {
       await wait(300);
@@ -62,15 +89,26 @@ export function createMockApi(): Swit4Api {
           minSupported: "0.8.0",
           downloadUrl: null,
           changelog: [
-            { version: "0.9.1", date: "2026-11-10", notes: ["DEMO: улучшен рейтинг серверов", "DEMO: экспорт выбранной подписки"] },
-            { version: "0.9.0", date: "2026-10-28", notes: ["DEMO: режим ограниченной связи", "DEMO: сравнение серверов"] },
+            {
+              version: "0.9.1",
+              date: "2026-11-10",
+              notes: ["DEMO: улучшен рейтинг серверов", "DEMO: экспорт выбранной подписки"],
+            },
+            {
+              version: "0.9.0",
+              date: "2026-10-28",
+              notes: ["DEMO: режим ограниченной связи", "DEMO: сравнение серверов"],
+            },
           ],
         },
       };
     },
     async health() {
       await wait(200);
-      return { ok: false, error: { code: "UNAVAILABLE", message: "Backend not configured (demo)" } };
+      return {
+        ok: false,
+        error: { code: "UNAVAILABLE", message: "Backend not configured (demo)" },
+      };
     },
   };
 }

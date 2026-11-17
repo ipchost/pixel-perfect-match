@@ -15,7 +15,11 @@ export function serversJson(servers: Server[]) {
   return JSON.stringify(
     {
       outbounds: servers.map((s, i) => toXrayOutbound(s.config, `proxy-${i + 1}`)),
-      _swit4: { exportedAt: new Date().toISOString(), names: servers.map((s) => s.name), isDemo: servers.some((s) => s.isDemo) },
+      _swit4: {
+        exportedAt: new Date().toISOString(),
+        names: servers.map((s) => s.name),
+        isDemo: servers.some((s) => s.isDemo),
+      },
     },
     null,
     2,

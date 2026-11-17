@@ -1,7 +1,14 @@
 import type { DomainRule, LimitedModeProfile } from "@/types";
 
 export function createDemoRules(): DomainRule[] {
-  const r = (id: string, match: DomainRule["match"], value: string, action: DomainRule["action"], priority: number, note?: string): DomainRule => ({ id, match, value, action, priority, enabled: true, note, isDemo: true });
+  const r = (
+    id: string,
+    match: DomainRule["match"],
+    value: string,
+    action: DomainRule["action"],
+    priority: number,
+    note?: string,
+  ): DomainRule => ({ id, match, value, action, priority, enabled: true, note, isDemo: true });
   return [
     r("rule_demo_1", "domain_suffix", "local", "direct", 10, "Локальная сеть"),
     r("rule_demo_2", "cidr", "192.168.0.0/16", "direct", 20, "Домашняя сеть"),

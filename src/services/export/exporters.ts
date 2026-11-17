@@ -85,7 +85,11 @@ export function toXrayOutbound(config: ServerConfig, tag = "proxy"): Record<stri
     security: config.security ?? "none",
   };
   if (config.security === "tls")
-    stream["tlsSettings"] = { serverName: config.sni, fingerprint: config.fingerprint, alpn: config.alpn };
+    stream["tlsSettings"] = {
+      serverName: config.sni,
+      fingerprint: config.fingerprint,
+      alpn: config.alpn,
+    };
   if (config.security === "reality")
     stream["realitySettings"] = {
       serverName: config.sni,
@@ -93,36 +97,74 @@ export function toXrayOutbound(config: ServerConfig, tag = "proxy"): Record<stri
       publicKey: config.publicKey,
       shortId: config.shortId,
     };
-  if (config.transport === "ws") stream["wsSettings"] = { path: config.path ?? "/", headers: config.host ? { Host: config.host } : undefined };
-  if (config.transport === "grpc") stream["grpcSettings"] = { serviceName: config.serviceName ?? "" };
+  if (config.transport === "ws")
+    stream["wsSettings"] = {
+      path: config.path ?? "/",
+      headers: config.host ? { Host: config.host } : undefined,
+    };
+  if (config.transport === "grpc")
+    stream["grpcSettings"] = { serviceName: config.serviceName ?? "" };
 
   switch (config.protocol) {
     case "vless":
       return {
         tag,
         protocol: "vless",
-        settings: { vnext: [{ address: config.address, port: config.port, users: [{ id: config.secret, encryption: "none", flow: config.flow }] }] },
+        settings: {
+          vnext: [
+            {
+              address: config.address,
+              port: config.port,
+              users: [{ id: config.secret, encryption: "none", flow: config.flow }],
+            },
+          ],
+        },
         streamSettings: stream,
       };
     case "vmess":
       return {
         tag,
         protocol: "vmess",
-        settings: { vnext: [{ address: config.address, port: config.port, users: [{ id: config.secret, alterId: config.alterId ?? 0, security: config.cipher ?? "auto" }] }] },
+        settings: {
+          vnext: [
+            {
+              address: config.address,
+              port: config.port,
+              users: [
+                {
+                  id: config.secret,
+                  alterId: config.alterId ?? 0,
+                  security: config.cipher ?? "auto",
+                },
+              ],
+            },
+          ],
+        },
         streamSettings: stream,
       };
     case "trojan":
       return {
         tag,
         protocol: "trojan",
-        settings: { servers: [{ address: config.address, port: config.port, password: config.secret }] },
+        settings: {
+          servers: [{ address: config.address, port: config.port, password: config.secret }],
+        },
         streamSettings: stream,
       };
     case "shadowsocks":
       return {
         tag,
         protocol: "shadowsocks",
-        settings: { servers: [{ address: config.address, port: config.port, method: config.method, password: config.secret }] },
+        settings: {
+          servers: [
+            {
+              address: config.address,
+              port: config.port,
+              method: config.method,
+              password: config.secret,
+            },
+          ],
+        },
       };
   }
 }

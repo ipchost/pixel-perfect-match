@@ -31,5 +31,11 @@ const RAW: Array<[string, string, boolean, string]> = [
 export const SWIT4_PACKAGE = "app.swit4.android";
 
 export function createDemoApps(): InstalledApp[] {
-  return RAW.map(([packageName, label, isSystem, iconKey]) => ({ packageName, label, isSystem, iconKey, isDemo: true }));
+  return RAW.map(([packageName, label, isSystem, iconKey]) => ({
+    packageName,
+    label,
+    isSystem,
+    iconKey,
+    isDemo: true,
+  }));
 }

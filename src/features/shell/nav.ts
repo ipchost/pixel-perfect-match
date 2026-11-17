@@ -1,5 +1,18 @@
 import type { LinkProps } from "@tanstack/react-router";
-import { BarChart3, Gauge, Heart, Home, Info, ListTree, Radar, Rss, ScrollText, Server, Settings, Stethoscope } from "lucide-react";
+import {
+  BarChart3,
+  Gauge,
+  Heart,
+  Home,
+  Info,
+  ListTree,
+  Radar,
+  Rss,
+  ScrollText,
+  Server,
+  Settings,
+  Stethoscope,
+} from "lucide-react";
 
 export interface NavItem {
   to: NonNullable<LinkProps["to"]>;

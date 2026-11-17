@@ -43,14 +43,29 @@ function adapterFromBridge(): ProbeAdapter {
 async function quickProbeCandidates(signal: AbortSignal): Promise<Server | null> {
   const st = useAppStore.getState();
   const enabledSubs = new Set(st.subscriptions.filter((s) => s.enabled).map((s) => s.id));
-  const pool = st.servers.filter((s) => !s.excludedFromAuto && (s.subscriptionId === null || enabledSubs.has(s.subscriptionId)) && s.status !== "config_error");
-  const ranked = [...pool].sort((a, b) => (a.lastProbe?.latencyMs ?? 9999) - (b.lastProbe?.latencyMs ?? 9999)).slice(0, 6);
+  const pool = st.servers.filter(
+    (s) =>
+      !s.excludedFromAuto &&
+      (s.subscriptionId === null || enabledSubs.has(s.subscriptionId)) &&
+      s.status !== "config_error",
+  );
+  const ranked = [...pool]
+    .sort((a, b) => (a.lastProbe?.latencyMs ?? 9999) - (b.lastProbe?.latencyMs ?? 9999))
+    .slice(0, 6);
   if (!ranked.length) return null;
   useAppStore.getState().setConnection({ phase: "probing" });
   const cfg = st.settings.scan;
   await runScan(
     ranked,
-    { concurrency: Math.min(3, cfg.concurrency), timeoutMs: cfg.timeoutMs, throughputBytesLimit: 0, method: cfg.method, onlyActiveSources: true, includeFavorites: true, runThroughput: false },
+    {
+      concurrency: Math.min(3, cfg.concurrency),
+      timeoutMs: cfg.timeoutMs,
+      throughputBytesLimit: 0,
+      method: cfg.method,
+      onlyActiveSources: true,
+      includeFavorites: true,
+      runThroughput: false,
+    },
     adapterFromBridge(),
     signal,
     {
@@ -65,7 +80,10 @@ async function quickProbeCandidates(signal: AbortSignal): Promise<Server | null>
   useAppStore.getState().setConnection({ phase: "selecting_best" });
   await wait(500, signal);
   const fresh = useAppStore.getState();
-  return pickBestServer(fresh.servers.filter((s) => ranked.some((r) => r.id === s.id)), fresh.settings.scan.staleAfterMin);
+  return pickBestServer(
+    fresh.servers.filter((s) => ranked.some((r) => r.id === s.id)),
+    fresh.settings.scan.staleAfterMin,
+  );
 }
 
 export async function connect(opts: { serverId?: string } = {}) {
@@ -74,11 +92,16 @@ export async function connect(opts: { serverId?: string } = {}) {
   abort = new AbortController();
   const signal = abort.signal;
   const bridge = getBridge();
-  const set = (p: Parameters<typeof store.setConnection>[0]) => useAppStore.getState().setConnection(p);
+  const set = (p: Parameters<typeof store.setConnection>[0]) =>
+    useAppStore.getState().setConnection(p);
 
   try {
     let server: Server | null = null;
-    const manualId = opts.serverId ?? (store.settings.connection.mode === "manual" ? store.settings.connection.manualServerId : null);
+    const manualId =
+      opts.serverId ??
+      (store.settings.connection.mode === "manual"
+        ? store.settings.connection.manualServerId
+        : null);
     if (manualId) {
       server = store.servers.find((s) => s.id === manualId) ?? null;
       if (!server) throw Object.assign(new Error("no server"), { code: "SERVER_NOT_FOUND" });
@@ -97,7 +120,8 @@ export async function connect(opts: { serverId?: string } = {}) {
       const ok = await askPermission();
       if (!ok) throw Object.assign(new Error("permission denied"), { code: "PERMISSION_DENIED" });
       const res = await bridge.connection.requestPermission();
-      if (res !== "granted") throw Object.assign(new Error("permission denied"), { code: "PERMISSION_DENIED" });
+      if (res !== "granted")
+        throw Object.assign(new Error("permission denied"), { code: "PERMISSION_DENIED" });
     }
     if (signal.aborted) throw new DOMException("cancelled", "AbortError");
 
@@ -110,26 +134,61 @@ export async function connect(opts: { serverId?: string } = {}) {
     });
     unsubTraffic = bridge.connection.onTraffic((s) => {
       const cur = useAppStore.getState().connection;
-      const samples = [...cur.stats.samples, { t: s.t, downBps: s.downBps, upBps: s.upBps }].slice(-60);
-      set({ stats: { ...cur.stats, downBps: s.downBps, upBps: s.upBps, bytesDown: s.bytesDown, bytesUp: s.bytesUp, samples, isDemo: bridge.isDemo } });
+      const samples = [...cur.stats.samples, { t: s.t, downBps: s.downBps, upBps: s.upBps }].slice(
+        -60,
+      );
+      set({
+        stats: {
+          ...cur.stats,
+          downBps: s.downBps,
+          upBps: s.upBps,
+          bytesDown: s.bytesDown,
+          bytesUp: s.bytesUp,
+          samples,
+          isDemo: bridge.isDemo,
+        },
+      });
     });
-    const packages = fresh.routing.mode === "whitelist" ? fresh.routing.whitelist : fresh.routing.mode === "blacklist" ? fresh.routing.blacklist : [];
+    const packages =
+      fresh.routing.mode === "whitelist"
+        ? fresh.routing.whitelist
+        : fresh.routing.mode === "blacklist"
+          ? fresh.routing.blacklist
+          : [];
     await bridge.connection.connect({
       server,
       routing: { mode: fresh.routing.mode, packages },
       domainRules: fresh.domainRules.filter((r) => r.enabled),
-      dns: { mode: fresh.settings.dns.mode, servers: fresh.settings.dns.customServers, ipv6: fresh.settings.dns.ipMode !== "ipv4" },
+      dns: {
+        mode: fresh.settings.dns.mode,
+        servers: fresh.settings.dns.customServers,
+        ipv6: fresh.settings.dns.ipMode !== "ipv4",
+      },
     });
     if (signal.aborted) {
       await bridge.connection.disconnect();
       throw new DOMException("cancelled", "AbortError");
     }
-    set({ phase: "connected", stats: { ...INITIAL_CONNECTION.stats, startedAt: Date.now(), isDemo: bridge.isDemo } });
+    set({
+      phase: "connected",
+      stats: { ...INITIAL_CONNECTION.stats, startedAt: Date.now(), isDemo: bridge.isDemo },
+    });
     useAppStore.setState({
       lastWorkingServerId: server.id,
-      routing: { ...fresh.routing, appliedMode: fresh.routing.mode, appliedAt: new Date().toISOString() },
+      routing: {
+        ...fresh.routing,
+        appliedMode: fresh.routing.mode,
+        appliedAt: new Date().toISOString(),
+      },
     });
-    useAppStore.getState().addEvent({ level: "success", category: "connection", message: `Подключено: ${server.name}`, isDemo: bridge.isDemo });
+    useAppStore
+      .getState()
+      .addEvent({
+        level: "success",
+        category: "connection",
+        message: `Подключено: ${server.name}`,
+        isDemo: bridge.isDemo,
+      });
   } catch (e) {
     unsubTraffic?.();
     unsubPhase?.();
@@ -139,7 +198,9 @@ export async function connect(opts: { serverId?: string } = {}) {
     }
     const code = (e as { code?: string }).code ?? "UNKNOWN";
     useAppStore.getState().setConnection({ phase: "error", errorCode: code });
-    useAppStore.getState().addEvent({ level: "error", category: "connection", message: `Ошибка подключения: ${code}` });
+    useAppStore
+      .getState()
+      .addEvent({ level: "error", category: "connection", message: `Ошибка подключения: ${code}` });
   } finally {
     abort = null;
   }
@@ -179,7 +240,14 @@ export async function disconnect() {
     });
   }
   useAppStore.getState().setConnection({ ...INITIAL_CONNECTION });
-  useAppStore.getState().addEvent({ level: "info", category: "connection", message: "Отключено пользователем", isDemo: bridge.isDemo });
+  useAppStore
+    .getState()
+    .addEvent({
+      level: "info",
+      category: "connection",
+      message: "Отключено пользователем",
+      isDemo: bridge.isDemo,
+    });
 }
 
 export function isBusy(phase: string) {

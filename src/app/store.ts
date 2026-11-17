@@ -64,7 +64,10 @@ export interface AppState {
   permissionPromptOpen: boolean;
 
   // actions
-  patchSettings: <K extends keyof AppSettings>(section: K, patch: AppSettings[K] extends object ? Partial<AppSettings[K]> : AppSettings[K]) => void;
+  patchSettings: <K extends keyof AppSettings>(
+    section: K,
+    patch: AppSettings[K] extends object ? Partial<AppSettings[K]> : AppSettings[K],
+  ) => void;
   setConnection: (patch: Partial<ConnectionState>) => void;
 
   upsertServers: (servers: Server[]) => void;
@@ -125,7 +128,10 @@ export const useAppStore = create<AppState>()(
         set((s) => ({
           settings: {
             ...s.settings,
-            [section]: typeof patch === "object" && patch !== null ? { ...(s.settings[section] as object), ...(patch as object) } : patch,
+            [section]:
+              typeof patch === "object" && patch !== null
+                ? { ...(s.settings[section] as object), ...(patch as object) }
+                : patch,
           },
         })),
       setConnection: (patch) => set((s) => ({ connection: { ...s.connection, ...patch } })),
@@ -136,12 +142,21 @@ export const useAppStore = create<AppState>()(
           servers.forEach((x) => map.set(x.id, { ...map.get(x.id), ...x }));
           return { servers: [...map.values()] };
         }),
-      updateServer: (id, patch) => set((s) => ({ servers: s.servers.map((x) => (x.id === id ? { ...x, ...patch } : x)) })),
+      updateServer: (id, patch) =>
+        set((s) => ({ servers: s.servers.map((x) => (x.id === id ? { ...x, ...patch } : x)) })),
       removeServers: (ids) => {
         const del = new Set(ids);
-        set((s) => ({ servers: s.servers.filter((x) => !del.has(x.id)), favorites: s.favorites.filter((f) => !del.has(f)) }));
+        set((s) => ({
+          servers: s.servers.filter((x) => !del.has(x.id)),
+          favorites: s.favorites.filter((f) => !del.has(f)),
+        }));
       },
-      toggleFavorite: (id) => set((s) => ({ favorites: s.favorites.includes(id) ? s.favorites.filter((f) => f !== id) : [id, ...s.favorites] })),
+      toggleFavorite: (id) =>
+        set((s) => ({
+          favorites: s.favorites.includes(id)
+            ? s.favorites.filter((f) => f !== id)
+            : [id, ...s.favorites],
+        })),
       setExcludedFromAuto: (id, excluded) => get().updateServer(id, { excludedFromAuto: excluded }),
       applyScanResult: (item) =>
         set((s) => ({
@@ -156,13 +171,21 @@ export const useAppStore = create<AppState>()(
               success: item.status !== "unavailable" && item.status !== "config_error",
               errorCode: item.errorCode,
             };
-            return { ...x, status: item.status, lastProbe: probe, probeHistory: [probe, ...x.probeHistory].slice(0, 12) };
+            return {
+              ...x,
+              status: item.status,
+              lastProbe: probe,
+              probeHistory: [probe, ...x.probeHistory].slice(0, 12),
+            };
           }),
         })),
       setScan: (scan) => set({ scan }),
 
       addSubscription: (sub) => set((s) => ({ subscriptions: [sub, ...s.subscriptions] })),
-      updateSubscription: (id, patch) => set((s) => ({ subscriptions: s.subscriptions.map((x) => (x.id === id ? { ...x, ...patch } : x)) })),
+      updateSubscription: (id, patch) =>
+        set((s) => ({
+          subscriptions: s.subscriptions.map((x) => (x.id === id ? { ...x, ...patch } : x)),
+        })),
       removeSubscription: (id) =>
         set((s) => {
           const fav = new Set(s.favorites);
@@ -184,13 +207,25 @@ export const useAppStore = create<AppState>()(
       addEvent: (e) =>
         set((s) => ({
           events: [
-            { id: uid("ev"), at: new Date().toISOString(), read: false, isDemo: e.isDemo ?? true, level: e.level, category: e.category, message: maskSecrets(e.message) },
+            {
+              id: uid("ev"),
+              at: new Date().toISOString(),
+              read: false,
+              isDemo: e.isDemo ?? true,
+              level: e.level,
+              category: e.category,
+              message: maskSecrets(e.message),
+            },
             ...s.events,
           ].slice(0, 300),
         })),
       markEventsRead: () => set((s) => ({ events: s.events.map((e) => ({ ...e, read: true })) })),
       clearEvents: () => set({ events: [] }),
-      addSession: (rec) => set((s) => ({ sessions: [rec, ...s.sessions].slice(0, 200), connectionsCount: s.connectionsCount + 1 })),
+      addSession: (rec) =>
+        set((s) => ({
+          sessions: [rec, ...s.sessions].slice(0, 200),
+          connectionsCount: s.connectionsCount + 1,
+        })),
       clearHistory: () => set({ sessions: [], daily: [], events: [], connectionsCount: 0 }),
 
       seedDemo: () => {
@@ -282,6 +317,7 @@ export async function hydrateStore() {
 }
 
 // Selectors
-export const selectServerById = (id: string | null) => (s: AppState) => (id ? s.servers.find((x) => x.id === id) ?? null : null);
+export const selectServerById = (id: string | null) => (s: AppState) =>
+  id ? (s.servers.find((x) => x.id === id) ?? null) : null;
 export const selectIsFavorite = (id: string) => (s: AppState) => s.favorites.includes(id);
 export const selectUnreadEvents = (s: AppState) => s.events.filter((e) => !e.read).length;

@@ -19,9 +19,17 @@ export const Route = createFileRoute("/events")({
   head: () => ({
     meta: [
       { title: "Журнал событий — SWIT4" },
-      { name: "description", content: "Журнал подключений, подписок, сканирований и правил SWIT4 с маскировкой секретов." },
+      {
+        name: "description",
+        content:
+          "Журнал подключений, подписок, сканирований и правил SWIT4 с маскировкой секретов.",
+      },
       { property: "og:title", content: "Журнал событий — SWIT4" },
-      { property: "og:description", content: "Журнал подключений, подписок, сканирований и правил SWIT4 с маскировкой секретов." },
+      {
+        property: "og:description",
+        content:
+          "Журнал подключений, подписок, сканирований и правил SWIT4 с маскировкой секретов.",
+      },
     ],
   }),
   component: Events,
@@ -46,16 +54,76 @@ function Events() {
     const t = setTimeout(markRead, 1500);
     return () => clearTimeout(t);
   }, [markRead]);
-  const list = useMemo(() => events.filter((e) => (cat === "all" || e.category === cat) && (lvl === "all" || e.level === lvl)), [events, cat, lvl]);
-  const exportLog = () => void getBridge().exporter.saveFile("swit4-events.txt", events.map((e) => `${e.at}\t${e.level}\t${e.category}\t${maskSecrets(e.message)}${e.isDemo ? "\t[DEMO]" : ""}`).join("\n"), "text/plain");
+  const list = useMemo(
+    () =>
+      events.filter(
+        (e) => (cat === "all" || e.category === cat) && (lvl === "all" || e.level === lvl),
+      ),
+    [events, cat, lvl],
+  );
+  const exportLog = () =>
+    void getBridge().exporter.saveFile(
+      "swit4-events.txt",
+      events
+        .map(
+          (e) =>
+            `${e.at}\t${e.level}\t${e.category}\t${maskSecrets(e.message)}${e.isDemo ? "\t[DEMO]" : ""}`,
+        )
+        .join("\n"),
+      "text/plain",
+    );
 
   return (
-    <Screen title={L("Журнал событий", "Event log")} subtitle={L("Секреты маскируются автоматически", "Secrets are masked automatically")} actions={<><Button variant="ghost" size="icon" onClick={exportLog} aria-label={L("Экспорт", "Export")}><Download /></Button><Button variant="ghost" size="icon" onClick={clear} aria-label={L("Очистить", "Clear")}><Trash2 /></Button></>}>
+    <Screen
+      title={L("Журнал событий", "Event log")}
+      subtitle={L("Секреты маскируются автоматически", "Secrets are masked automatically")}
+      actions={
+        <>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={exportLog}
+            aria-label={L("Экспорт", "Export")}
+          >
+            <Download />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={clear} aria-label={L("Очистить", "Clear")}>
+            <Trash2 />
+          </Button>
+        </>
+      }
+    >
       <div className="mb-4 space-y-2">
-        <Chips label={L("Категория", "Category")} value={cat} onChange={setCat} options={[{ value: "all", label: L("Все", "All") }, { value: "connection", label: L("Соединение", "Connection") }, { value: "subscription", label: L("Подписки", "Sources") }, { value: "scan", label: L("Сканирование", "Scan") }, { value: "routing", label: L("Правила", "Rules") }, { value: "system", label: L("Система", "System") }, { value: "update", label: L("Обновления", "Updates") }]} />
-        <Chips label={L("Уровень", "Level")} value={lvl} onChange={setLvl} options={[{ value: "all", label: L("Любой", "Any") }, { value: "error", label: L("Ошибки", "Errors") }, { value: "warning", label: L("Предупреждения", "Warnings") }, { value: "success", label: L("Успех", "Success") }, { value: "info", label: L("Инфо", "Info") }]} />
+        <Chips
+          label={L("Категория", "Category")}
+          value={cat}
+          onChange={setCat}
+          options={[
+            { value: "all", label: L("Все", "All") },
+            { value: "connection", label: L("Соединение", "Connection") },
+            { value: "subscription", label: L("Подписки", "Sources") },
+            { value: "scan", label: L("Сканирование", "Scan") },
+            { value: "routing", label: L("Правила", "Rules") },
+            { value: "system", label: L("Система", "System") },
+            { value: "update", label: L("Обновления", "Updates") },
+          ]}
+        />
+        <Chips
+          label={L("Уровень", "Level")}
+          value={lvl}
+          onChange={setLvl}
+          options={[
+            { value: "all", label: L("Любой", "Any") },
+            { value: "error", label: L("Ошибки", "Errors") },
+            { value: "warning", label: L("Предупреждения", "Warnings") },
+            { value: "success", label: L("Успех", "Success") },
+            { value: "info", label: L("Инфо", "Info") },
+          ]}
+        />
       </div>
-      {list.length === 0 ? <EmptyState kind="events" title={L("Событий нет", "No events")} /> : (
+      {list.length === 0 ? (
+        <EmptyState kind="events" title={L("Событий нет", "No events")} />
+      ) : (
         <div className="surface-card divide-y divide-border overflow-hidden">
           {list.map((e) => {
             const m = ICON[e.level];
@@ -64,7 +132,10 @@ function Events() {
                 <m.i className={cn("mt-0.5 size-4 shrink-0", m.c)} />
                 <div className="min-w-0 flex-1">
                   <p className="text-sm">{e.message}</p>
-                  <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">{formatDateTime(e.at, locale)} · {e.category}{e.isDemo && <DemoBadge withIcon={false} />}</div>
+                  <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
+                    {formatDateTime(e.at, locale)} · {e.category}
+                    {e.isDemo && <DemoBadge withIcon={false} />}
+                  </div>
                 </div>
               </div>
             );

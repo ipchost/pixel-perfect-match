@@ -264,7 +264,14 @@ export interface BatchParseResult {
 
 /** Ключ дедупликации: протокол + адрес + порт + секрет + транспорт. */
 export function dedupKey(c: ServerConfig): string {
-  return [c.protocol, c.address.toLowerCase(), c.port, c.secret, c.transport ?? "", c.path ?? ""].join("|");
+  return [
+    c.protocol,
+    c.address.toLowerCase(),
+    c.port,
+    c.secret,
+    c.transport ?? "",
+    c.path ?? "",
+  ].join("|");
 }
 
 /**

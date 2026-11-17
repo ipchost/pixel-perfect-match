@@ -7,7 +7,16 @@ export interface Paginated<T> {
 }
 
 export interface ApiError {
-  code: "NETWORK" | "TIMEOUT" | "RATE_LIMITED" | "NOT_FOUND" | "VALIDATION" | "SSRF_BLOCKED" | "TOO_LARGE" | "SERVER" | "UNAVAILABLE";
+  code:
+    | "NETWORK"
+    | "TIMEOUT"
+    | "RATE_LIMITED"
+    | "NOT_FOUND"
+    | "VALIDATION"
+    | "SSRF_BLOCKED"
+    | "TOO_LARGE"
+    | "SERVER"
+    | "UNAVAILABLE";
   message: string;
   retryAfterSec?: number | undefined;
 }
@@ -35,14 +44,26 @@ export interface HealthInfo {
 
 export interface Swit4Api {
   readonly isDemo: boolean;
-  listServers(params?: { country?: string | undefined; protocol?: string | undefined; cursor?: string }): Promise<ApiResult<Paginated<Server>>>;
+  listServers(params?: {
+    country?: string | undefined;
+    protocol?: string | undefined;
+    cursor?: string;
+  }): Promise<ApiResult<Paginated<Server>>>;
   listCountries(): Promise<ApiResult<Country[]>>;
   listSubscriptions(): Promise<ApiResult<Subscription[]>>;
   createSubscription(input: CreateSubscriptionInput): Promise<ApiResult<Subscription>>;
-  updateSubscription(id: string, patch: Partial<Pick<Subscription, "name" | "url" | "enabled" | "refreshIntervalMin">>): Promise<ApiResult<Subscription>>;
+  updateSubscription(
+    id: string,
+    patch: Partial<Pick<Subscription, "name" | "url" | "enabled" | "refreshIntervalMin">>,
+  ): Promise<ApiResult<Subscription>>;
   deleteSubscription(id: string): Promise<ApiResult<{ id: string }>>;
-  refreshSubscription(id: string): Promise<ApiResult<{ added: number; removed: number; total: number }>>;
-  createScan(input: { serverIds: string[]; options: ScanOptions }): Promise<ApiResult<{ id: string }>>;
+  refreshSubscription(
+    id: string,
+  ): Promise<ApiResult<{ added: number; removed: number; total: number }>>;
+  createScan(input: {
+    serverIds: string[];
+    options: ScanOptions;
+  }): Promise<ApiResult<{ id: string }>>;
   getScan(id: string): Promise<ApiResult<ScanProgress>>;
   getAppVersion(): Promise<ApiResult<AppVersionInfo>>;
   health(): Promise<ApiResult<HealthInfo>>;

@@ -1,4 +1,11 @@
-import type { ProbeMethod, ProbeResult, Protocol, Server, ServerConfig, ServerStatus } from "@/types";
+import type {
+  ProbeMethod,
+  ProbeResult,
+  Protocol,
+  Server,
+  ServerConfig,
+  ServerStatus,
+} from "@/types";
 import { seeded } from "@/lib/random";
 
 /**
@@ -34,10 +41,31 @@ const SEED: Array<[string, string, string, Protocol, string | null]> = [
 ];
 
 const STATUS_PLAN: ServerStatus[] = [
-  "available", "available", "slow", "available", "available", "unstable", "available",
-  "available", "unchecked", "available", "unavailable", "available", "unchecked", "available",
-  "slow", "available", "unstable", "unchecked", "slow", "available", "config_error",
-  "unavailable", "unchecked", "available", "available",
+  "available",
+  "available",
+  "slow",
+  "available",
+  "available",
+  "unstable",
+  "available",
+  "available",
+  "unchecked",
+  "available",
+  "unavailable",
+  "available",
+  "unchecked",
+  "available",
+  "slow",
+  "available",
+  "unstable",
+  "unchecked",
+  "slow",
+  "available",
+  "config_error",
+  "unavailable",
+  "unchecked",
+  "available",
+  "available",
 ];
 
 function uuidFrom(rand: () => number): string {
@@ -47,35 +75,108 @@ function uuidFrom(rand: () => number): string {
 }
 
 function makeConfig(protocol: Protocol, host: string, rand: () => number): ServerConfig {
-  const secret = protocol === "shadowsocks" || protocol === "trojan" ? `demo-${uuidFrom(rand).slice(0, 18)}` : uuidFrom(rand);
+  const secret =
+    protocol === "shadowsocks" || protocol === "trojan"
+      ? `demo-${uuidFrom(rand).slice(0, 18)}`
+      : uuidFrom(rand);
   switch (protocol) {
     case "vless":
-      return { protocol, address: host, port: 443, secret, transport: rand() > 0.5 ? "tcp" : "grpc", security: "reality", sni: "www.example.com", fingerprint: "chrome", publicKey: "DEMO_PUBLIC_KEY_not_real_0000000000000000", shortId: "6ba85179", flow: "xtls-rprx-vision", serviceName: "grpc" };
+      return {
+        protocol,
+        address: host,
+        port: 443,
+        secret,
+        transport: rand() > 0.5 ? "tcp" : "grpc",
+        security: "reality",
+        sni: "www.example.com",
+        fingerprint: "chrome",
+        publicKey: "DEMO_PUBLIC_KEY_not_real_0000000000000000",
+        shortId: "6ba85179",
+        flow: "xtls-rprx-vision",
+        serviceName: "grpc",
+      };
     case "vmess":
-      return { protocol, address: host, port: 443, secret, transport: "ws", security: "tls", sni: host, host, path: "/ws", alterId: 0, cipher: "auto" };
+      return {
+        protocol,
+        address: host,
+        port: 443,
+        secret,
+        transport: "ws",
+        security: "tls",
+        sni: host,
+        host,
+        path: "/ws",
+        alterId: 0,
+        cipher: "auto",
+      };
     case "trojan":
-      return { protocol, address: host, port: 443, secret, transport: "tcp", security: "tls", sni: host };
+      return {
+        protocol,
+        address: host,
+        port: 443,
+        secret,
+        transport: "tcp",
+        security: "tls",
+        sni: host,
+      };
     case "shadowsocks":
       return { protocol, address: host, port: 8388, secret, method: "chacha20-ietf-poly1305" };
   }
 }
 
 function methodFor(protocol: Protocol): ProbeMethod {
-  return protocol === "shadowsocks" ? "tcp_connect" : protocol === "vless" ? "proxy_handshake" : "tls_handshake";
+  return protocol === "shadowsocks"
+    ? "tcp_connect"
+    : protocol === "vless"
+      ? "proxy_handshake"
+      : "tls_handshake";
 }
 
-function probeFor(status: ServerStatus, protocol: Protocol, ageMin: number, now: number, rand: () => number): ProbeResult | null {
+function probeFor(
+  status: ServerStatus,
+  protocol: Protocol,
+  ageMin: number,
+  now: number,
+  rand: () => number,
+): ProbeResult | null {
   if (status === "unchecked" || status === "checking") return null;
   const checkedAt = new Date(now - ageMin * 60_000).toISOString();
-  if (status === "config_error") return { latencyMs: null, method: methodFor(protocol), downloadMbps: null, uploadMbps: null, checkedAt, success: false, errorCode: "CONFIG_INVALID" };
-  if (status === "unavailable") return { latencyMs: null, method: methodFor(protocol), downloadMbps: null, uploadMbps: null, checkedAt, success: false, errorCode: "TIMEOUT" };
-  const base = status === "available" ? 40 + rand() * 90 : status === "slow" ? 260 + rand() * 200 : 120 + rand() * 180;
+  if (status === "config_error")
+    return {
+      latencyMs: null,
+      method: methodFor(protocol),
+      downloadMbps: null,
+      uploadMbps: null,
+      checkedAt,
+      success: false,
+      errorCode: "CONFIG_INVALID",
+    };
+  if (status === "unavailable")
+    return {
+      latencyMs: null,
+      method: methodFor(protocol),
+      downloadMbps: null,
+      uploadMbps: null,
+      checkedAt,
+      success: false,
+      errorCode: "TIMEOUT",
+    };
+  const base =
+    status === "available"
+      ? 40 + rand() * 90
+      : status === "slow"
+        ? 260 + rand() * 200
+        : 120 + rand() * 180;
   const measuredSpeed = status !== "unstable" && rand() > 0.25;
   return {
     latencyMs: Math.round(base),
     method: methodFor(protocol),
-    downloadMbps: measuredSpeed ? Math.round((status === "slow" ? 4 + rand() * 10 : 25 + rand() * 120) * 10) / 10 : null,
-    uploadMbps: measuredSpeed ? Math.round((status === "slow" ? 2 + rand() * 5 : 10 + rand() * 60) * 10) / 10 : null,
+    downloadMbps: measuredSpeed
+      ? Math.round((status === "slow" ? 4 + rand() * 10 : 25 + rand() * 120) * 10) / 10
+      : null,
+    uploadMbps: measuredSpeed
+      ? Math.round((status === "slow" ? 2 + rand() * 5 : 10 + rand() * 60) * 10) / 10
+      : null,
     testBytesLimit: measuredSpeed ? 2 * 1024 * 1024 : undefined,
     checkedAt,
     success: true,
@@ -90,7 +191,22 @@ export function createDemoServers(now = Date.now()): Server[] {
     const ageMin = i % 5 === 0 ? 60 * 26 : 3 + Math.round(rand() * 50);
     const lastProbe = probeFor(status, protocol, ageMin, now, rand);
     const history: ProbeResult[] = lastProbe
-      ? [lastProbe, ...Array.from({ length: 6 }, (_, k) => probeFor(rand() > (status === "unstable" ? 0.5 : 0.1) ? (status === "slow" ? "slow" : "available") : "unavailable", protocol, ageMin + (k + 1) * 30, now, rand)!)]
+      ? [
+          lastProbe,
+          ...Array.from({ length: 6 }, (_, k) =>
+            probeFor(
+              rand() > (status === "unstable" ? 0.5 : 0.1)
+                ? status === "slow"
+                  ? "slow"
+                  : "available"
+                : "unavailable",
+              protocol,
+              ageMin + (k + 1) * 30,
+              now,
+              rand,
+            )!,
+          ),
+        ]
       : [];
     return {
       id: `srv_demo_${String(i + 1).padStart(2, "0")}`,

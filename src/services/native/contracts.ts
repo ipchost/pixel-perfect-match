@@ -61,15 +61,26 @@ export interface InstalledAppsRepository {
 /** VpnService.Builder.addAllowedApplication / addDisallowedApplication. */
 export interface RoutingManager {
   /** Проверка, что набор пакетов применим (пакеты установлены, режимы не смешаны). */
-  validate(mode: AppRoutingMode, packages: string[]): Promise<{ ok: boolean; missing: string[]; reason?: string }>;
+  validate(
+    mode: AppRoutingMode,
+    packages: string[],
+  ): Promise<{ ok: boolean; missing: string[]; reason?: string }>;
   /** Режим, применённый к текущему туннелю. */
   applied(): Promise<{ mode: AppRoutingMode; packages: string[] } | null>;
 }
 
 /** Android Sharesheet / SAF / Clipboard. */
 export interface ExportManager {
-  copy(text: string, opts?: { sensitive?: boolean | undefined; clearAfterSec?: number | null }): Promise<boolean>;
-  share(payload: { title: string; text?: string | undefined; fileName?: string | undefined; mime?: string }): Promise<boolean>;
+  copy(
+    text: string,
+    opts?: { sensitive?: boolean | undefined; clearAfterSec?: number | null },
+  ): Promise<boolean>;
+  share(payload: {
+    title: string;
+    text?: string | undefined;
+    fileName?: string | undefined;
+    mime?: string;
+  }): Promise<boolean>;
   saveFile(fileName: string, content: string, mime: string): Promise<boolean>;
 }
 
@@ -89,7 +100,12 @@ export interface DiagnosticsSnapshot {
 export interface DiagnosticsManager {
   snapshot(): Promise<DiagnosticsSnapshot>;
   /** Проверка качества сети ДО подключения: отличить проблему Wi-Fi/моб. сети от проблемы сервера. */
-  networkQuality(): Promise<{ reachable: boolean; latencyMs: number | null; method: string; isDemo: boolean }>;
+  networkQuality(): Promise<{
+    reachable: boolean;
+    latencyMs: number | null;
+    method: string;
+    isDemo: boolean;
+  }>;
 }
 
 export interface NativeBridge {

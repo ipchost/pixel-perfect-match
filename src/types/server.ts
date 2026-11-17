@@ -9,13 +9,7 @@ export type Security = "none" | "tls" | "reality";
  * `unchecked` — проверки не было; `checking` — идёт проверка; `config_error` — конфиг не прошёл валидацию.
  */
 export type ServerStatus =
-  | "available"
-  | "slow"
-  | "unstable"
-  | "unavailable"
-  | "unchecked"
-  | "checking"
-  | "config_error";
+  "available" | "slow" | "unstable" | "unavailable" | "unchecked" | "checking" | "config_error";
 
 /** Метод, которым было получено значение задержки. TCP connect ≠ ping. */
 export type ProbeMethod = "tcp_connect" | "tls_handshake" | "proxy_handshake" | "control_endpoint";

@@ -7,7 +7,11 @@ export const Route = createFileRoute("/rules/whitelist")({
   head: () => ({
     meta: [
       { title: "Белый список — SWIT4" },
-      { name: "description", content: "Только выбранные приложения идут через VPN. Выбор демо-приложений, поиск, импорт и экспорт package names." },
+      {
+        name: "description",
+        content:
+          "Только выбранные приложения идут через VPN. Выбор демо-приложений, поиск, импорт и экспорт package names.",
+      },
       { property: "og:title", content: "Белый список — SWIT4" },
       { property: "og:description", content: "Только выбранные приложения идут через VPN." },
     ],

@@ -1,14 +1,30 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type Kind = "servers" | "search" | "subscriptions" | "favorites" | "events" | "apps" | "rules" | "stats";
+type Kind =
+  "servers" | "search" | "subscriptions" | "favorites" | "events" | "apps" | "rules" | "stats";
 
 /** Линейные иллюстрации пустых состояний в стиле знака SWIT4 (без детских картинок). */
 function Illustration({ kind }: { kind: Kind }) {
-  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const common = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.6,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
   return (
     <svg viewBox="0 0 120 88" className="h-[88px] w-[120px]" aria-hidden>
-      <rect x="10" y="10" width="100" height="68" rx="18" className="text-border" {...common} strokeDasharray="3 5" />
+      <rect
+        x="10"
+        y="10"
+        width="100"
+        height="68"
+        rx="18"
+        className="text-border"
+        {...common}
+        strokeDasharray="3 5"
+      />
       <g className="text-muted-foreground" {...common}>
         {kind === "servers" && (
           <>
@@ -32,7 +48,9 @@ function Illustration({ kind }: { kind: Kind }) {
             <path d="M70 46v14M63 53h14" />
           </>
         )}
-        {kind === "favorites" && <path d="M60 28l5 10 11 1.6-8 7.8 2 11-10-5.3-10 5.3 2-11-8-7.8 11-1.6z" />}
+        {kind === "favorites" && (
+          <path d="M60 28l5 10 11 1.6-8 7.8 2 11-10-5.3-10 5.3 2-11-8-7.8 11-1.6z" />
+        )}
         {kind === "events" && (
           <>
             <path d="M50 54V42a10 10 0 0 1 20 0v12l3 4H47z" />
@@ -61,9 +79,23 @@ function Illustration({ kind }: { kind: Kind }) {
   );
 }
 
-export function EmptyState({ kind, title, text, action, className }: { kind: Kind; title: string; text?: string; action?: ReactNode; className?: string }) {
+export function EmptyState({
+  kind,
+  title,
+  text,
+  action,
+  className,
+}: {
+  kind: Kind;
+  title: string;
+  text?: string;
+  action?: ReactNode;
+  className?: string;
+}) {
   return (
-    <div className={cn("flex flex-col items-center px-6 py-10 text-center animate-fade-up", className)}>
+    <div
+      className={cn("flex flex-col items-center px-6 py-10 text-center animate-fade-up", className)}
+    >
       <Illustration kind={kind} />
       <h3 className="mt-4 text-base font-semibold text-foreground">{title}</h3>
       {text && <p className="mt-1.5 max-w-xs text-sm text-muted-foreground">{text}</p>}
