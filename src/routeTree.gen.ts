@@ -13,9 +13,12 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as ScanRouteImport } from './routes/scan'
 import { Route as ServersRouteImport } from './routes/servers'
+import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
 import { Route as ServerIdRouteImport } from './routes/server.$id'
 import { Route as ServersIndexRouteImport } from './routes/servers.index'
 import { Route as ServersCountryRouteImport } from './routes/servers.$country'
+import { Route as SubscriptionsIndexRouteImport } from './routes/subscriptions.index'
+import { Route as SubscriptionsIdRouteImport } from './routes/subscriptions.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -37,6 +40,11 @@ const ServersRoute = ServersRouteImport.update({
   path: '/servers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SubscriptionsRoute = SubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServerIdRoute = ServerIdRouteImport.update({
   id: '/server/$id',
   path: '/server/$id',
@@ -52,15 +60,28 @@ const ServersCountryRoute = ServersCountryRouteImport.update({
   path: '/$country',
   getParentRoute: () => ServersRoute,
 } as any)
+const SubscriptionsIndexRoute = SubscriptionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SubscriptionsRoute,
+} as any)
+const SubscriptionsIdRoute = SubscriptionsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => SubscriptionsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
   '/scan': typeof ScanRoute
   '/servers': typeof ServersRouteWithChildren
+  '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
+  '/subscriptions/$id': typeof SubscriptionsIdRoute
   '/servers/': typeof ServersIndexRoute
+  '/subscriptions/': typeof SubscriptionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -68,7 +89,9 @@ export interface FileRoutesByTo {
   '/scan': typeof ScanRoute
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
+  '/subscriptions/$id': typeof SubscriptionsIdRoute
   '/servers': typeof ServersIndexRoute
+  '/subscriptions': typeof SubscriptionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -76,9 +99,12 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/scan': typeof ScanRoute
   '/servers': typeof ServersRouteWithChildren
+  '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
+  '/subscriptions/$id': typeof SubscriptionsIdRoute
   '/servers/': typeof ServersIndexRoute
+  '/subscriptions/': typeof SubscriptionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -87,9 +113,12 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/scan'
     | '/servers'
+    | '/subscriptions'
     | '/server/$id'
     | '/servers/$country'
+    | '/subscriptions/$id'
     | '/servers/'
+    | '/subscriptions/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -97,16 +126,21 @@ export interface FileRouteTypes {
     | '/scan'
     | '/server/$id'
     | '/servers/$country'
+    | '/subscriptions/$id'
     | '/servers'
+    | '/subscriptions'
   id:
     | '__root__'
     | '/'
     | '/onboarding'
     | '/scan'
     | '/servers'
+    | '/subscriptions'
     | '/server/$id'
     | '/servers/$country'
+    | '/subscriptions/$id'
     | '/servers/'
+    | '/subscriptions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -114,6 +148,7 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   ScanRoute: typeof ScanRoute
   ServersRoute: typeof ServersRouteWithChildren
+  SubscriptionsRoute: typeof SubscriptionsRouteWithChildren
   ServerIdRoute: typeof ServerIdRoute
 }
 
@@ -147,6 +182,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/subscriptions': {
+      id: '/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/subscriptions'
+      preLoaderRoute: typeof SubscriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/server/$id': {
       id: '/server/$id'
       path: '/server/$id'
@@ -168,6 +210,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServersCountryRouteImport
       parentRoute: typeof ServersRoute
     }
+    '/subscriptions/': {
+      id: '/subscriptions/'
+      path: '/'
+      fullPath: '/subscriptions/'
+      preLoaderRoute: typeof SubscriptionsIndexRouteImport
+      parentRoute: typeof SubscriptionsRoute
+    }
+    '/subscriptions/$id': {
+      id: '/subscriptions/$id'
+      path: '/$id'
+      fullPath: '/subscriptions/$id'
+      preLoaderRoute: typeof SubscriptionsIdRouteImport
+      parentRoute: typeof SubscriptionsRoute
+    }
   }
 }
 
@@ -184,11 +240,26 @@ const ServersRouteChildren: ServersRouteChildren = {
 const ServersRouteWithChildren =
   ServersRoute._addFileChildren(ServersRouteChildren)
 
+interface SubscriptionsRouteChildren {
+  SubscriptionsIdRoute: typeof SubscriptionsIdRoute
+  SubscriptionsIndexRoute: typeof SubscriptionsIndexRoute
+}
+
+const SubscriptionsRouteChildren: SubscriptionsRouteChildren = {
+  SubscriptionsIdRoute: SubscriptionsIdRoute,
+  SubscriptionsIndexRoute: SubscriptionsIndexRoute,
+}
+
+const SubscriptionsRouteWithChildren = SubscriptionsRoute._addFileChildren(
+  SubscriptionsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OnboardingRoute: OnboardingRoute,
   ScanRoute: ScanRoute,
   ServersRoute: ServersRouteWithChildren,
+  SubscriptionsRoute: SubscriptionsRouteWithChildren,
   ServerIdRoute: ServerIdRoute,
 }
 export const routeTree = rootRouteImport
