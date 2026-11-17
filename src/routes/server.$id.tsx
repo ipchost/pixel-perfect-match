@@ -151,7 +151,7 @@ function ServerDetail() {
         <Card className="divide-y divide-border">
           <label className="flex items-center justify-between gap-4 p-4"><span className="flex items-center gap-3 text-sm"><Star className="size-4 text-warning" />{L("В избранном", "Favorite")}</span><Switch checked={fav} onCheckedChange={() => toggleFavorite(server.id)} /></label>
           <label className="flex items-center justify-between gap-4 p-4"><span className="flex items-center gap-3 text-sm"><Ban className="size-4 text-muted-foreground" />{L("Исключить из автовыбора", "Exclude from auto")}</span><Switch checked={server.excludedFromAuto} onCheckedChange={(v) => setExcludedFromAuto(server.id, v)} /></label>
-          <Link to="/compare" search={{ ids: server.id }} className="flex items-center gap-3 p-4 text-sm hover:bg-surface-2"><Gauge className="size-4 text-signal" />{L("Сравнить с другими", "Compare with others")}</Link>
+          <Link to="/compare" className="flex items-center gap-3 p-4 text-sm hover:bg-surface-2"><Gauge className="size-4 text-signal" />{L("Сравнить с другими", "Compare with others")}</Link>
           {server.subscriptionId === null || server.missingFromSource ? (
             <button className="flex w-full items-center gap-3 p-4 text-left text-sm text-destructive hover:bg-surface-2" onClick={() => { removeServers([server.id]); toast(L("Сервер удалён", "Server removed")); history.back(); }}><Trash2 className="size-4" />{L("Удалить сервер", "Delete server")}</button>
           ) : null}

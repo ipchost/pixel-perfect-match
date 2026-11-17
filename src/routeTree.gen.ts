@@ -18,6 +18,8 @@ import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
 import { Route as RulesIndexRouteImport } from './routes/rules.index'
 import { Route as RulesAppsRouteImport } from './routes/rules.apps'
 import { Route as RulesBlacklistRouteImport } from './routes/rules.blacklist'
+import { Route as RulesDomainsRouteImport } from './routes/rules.domains'
+import { Route as RulesLimitedRouteImport } from './routes/rules.limited'
 import { Route as RulesWhitelistRouteImport } from './routes/rules.whitelist'
 import { Route as ServerIdRouteImport } from './routes/server.$id'
 import { Route as ServersIndexRouteImport } from './routes/servers.index'
@@ -70,6 +72,16 @@ const RulesBlacklistRoute = RulesBlacklistRouteImport.update({
   path: '/blacklist',
   getParentRoute: () => RulesRoute,
 } as any)
+const RulesDomainsRoute = RulesDomainsRouteImport.update({
+  id: '/domains',
+  path: '/domains',
+  getParentRoute: () => RulesRoute,
+} as any)
+const RulesLimitedRoute = RulesLimitedRouteImport.update({
+  id: '/limited',
+  path: '/limited',
+  getParentRoute: () => RulesRoute,
+} as any)
 const RulesWhitelistRoute = RulesWhitelistRouteImport.update({
   id: '/whitelist',
   path: '/whitelist',
@@ -110,6 +122,8 @@ export interface FileRoutesByFullPath {
   '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/rules/apps': typeof RulesAppsRoute
   '/rules/blacklist': typeof RulesBlacklistRoute
+  '/rules/domains': typeof RulesDomainsRoute
+  '/rules/limited': typeof RulesLimitedRoute
   '/rules/whitelist': typeof RulesWhitelistRoute
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
@@ -124,6 +138,8 @@ export interface FileRoutesByTo {
   '/scan': typeof ScanRoute
   '/rules/apps': typeof RulesAppsRoute
   '/rules/blacklist': typeof RulesBlacklistRoute
+  '/rules/domains': typeof RulesDomainsRoute
+  '/rules/limited': typeof RulesLimitedRoute
   '/rules/whitelist': typeof RulesWhitelistRoute
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
@@ -142,6 +158,8 @@ export interface FileRoutesById {
   '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/rules/apps': typeof RulesAppsRoute
   '/rules/blacklist': typeof RulesBlacklistRoute
+  '/rules/domains': typeof RulesDomainsRoute
+  '/rules/limited': typeof RulesLimitedRoute
   '/rules/whitelist': typeof RulesWhitelistRoute
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
@@ -161,6 +179,8 @@ export interface FileRouteTypes {
     | '/subscriptions'
     | '/rules/apps'
     | '/rules/blacklist'
+    | '/rules/domains'
+    | '/rules/limited'
     | '/rules/whitelist'
     | '/server/$id'
     | '/servers/$country'
@@ -175,6 +195,8 @@ export interface FileRouteTypes {
     | '/scan'
     | '/rules/apps'
     | '/rules/blacklist'
+    | '/rules/domains'
+    | '/rules/limited'
     | '/rules/whitelist'
     | '/server/$id'
     | '/servers/$country'
@@ -192,6 +214,8 @@ export interface FileRouteTypes {
     | '/subscriptions'
     | '/rules/apps'
     | '/rules/blacklist'
+    | '/rules/domains'
+    | '/rules/limited'
     | '/rules/whitelist'
     | '/server/$id'
     | '/servers/$country'
@@ -276,6 +300,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RulesBlacklistRouteImport
       parentRoute: typeof RulesRoute
     }
+    '/rules/domains': {
+      id: '/rules/domains'
+      path: '/domains'
+      fullPath: '/rules/domains'
+      preLoaderRoute: typeof RulesDomainsRouteImport
+      parentRoute: typeof RulesRoute
+    }
+    '/rules/limited': {
+      id: '/rules/limited'
+      path: '/limited'
+      fullPath: '/rules/limited'
+      preLoaderRoute: typeof RulesLimitedRouteImport
+      parentRoute: typeof RulesRoute
+    }
     '/rules/whitelist': {
       id: '/rules/whitelist'
       path: '/whitelist'
@@ -324,6 +362,8 @@ declare module '@tanstack/react-router' {
 interface RulesRouteChildren {
   RulesAppsRoute: typeof RulesAppsRoute
   RulesBlacklistRoute: typeof RulesBlacklistRoute
+  RulesDomainsRoute: typeof RulesDomainsRoute
+  RulesLimitedRoute: typeof RulesLimitedRoute
   RulesWhitelistRoute: typeof RulesWhitelistRoute
   RulesIndexRoute: typeof RulesIndexRoute
 }
@@ -331,6 +371,8 @@ interface RulesRouteChildren {
 const RulesRouteChildren: RulesRouteChildren = {
   RulesAppsRoute: RulesAppsRoute,
   RulesBlacklistRoute: RulesBlacklistRoute,
+  RulesDomainsRoute: RulesDomainsRoute,
+  RulesLimitedRoute: RulesLimitedRoute,
   RulesWhitelistRoute: RulesWhitelistRoute,
   RulesIndexRoute: RulesIndexRoute,
 }
