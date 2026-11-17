@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompareRouteImport } from './routes/compare'
+import { Route as DiagnosticsRouteImport } from './routes/diagnostics'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
@@ -39,6 +40,11 @@ const IndexRoute = IndexRouteImport.update({
 const CompareRoute = CompareRouteImport.update({
   id: '/compare',
   path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiagnosticsRoute = DiagnosticsRouteImport.update({
+  id: '/diagnostics',
+  path: '/diagnostics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventsRoute = EventsRouteImport.update({
@@ -140,6 +146,7 @@ const SubscriptionsIdRoute = SubscriptionsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/diagnostics': typeof DiagnosticsRoute
   '/events': typeof EventsRoute
   '/favorites': typeof FavoritesRoute
   '/onboarding': typeof OnboardingRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/diagnostics': typeof DiagnosticsRoute
   '/events': typeof EventsRoute
   '/favorites': typeof FavoritesRoute
   '/onboarding': typeof OnboardingRoute
@@ -184,6 +192,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/diagnostics': typeof DiagnosticsRoute
   '/events': typeof EventsRoute
   '/favorites': typeof FavoritesRoute
   '/onboarding': typeof OnboardingRoute
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/compare'
+    | '/diagnostics'
     | '/events'
     | '/favorites'
     | '/onboarding'
@@ -232,6 +242,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/compare'
+    | '/diagnostics'
     | '/events'
     | '/favorites'
     | '/onboarding'
@@ -252,6 +263,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/compare'
+    | '/diagnostics'
     | '/events'
     | '/favorites'
     | '/onboarding'
@@ -276,6 +288,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompareRoute: typeof CompareRoute
+  DiagnosticsRoute: typeof DiagnosticsRoute
   EventsRoute: typeof EventsRoute
   FavoritesRoute: typeof FavoritesRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -301,6 +314,13 @@ declare module '@tanstack/react-router' {
       path: '/compare'
       fullPath: '/compare'
       preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diagnostics': {
+      id: '/diagnostics'
+      path: '/diagnostics'
+      fullPath: '/diagnostics'
+      preLoaderRoute: typeof DiagnosticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/events': {
@@ -489,6 +509,7 @@ const SubscriptionsRouteWithChildren = SubscriptionsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompareRoute: CompareRoute,
+  DiagnosticsRoute: DiagnosticsRoute,
   EventsRoute: EventsRoute,
   FavoritesRoute: FavoritesRoute,
   OnboardingRoute: OnboardingRoute,
