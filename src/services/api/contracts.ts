@@ -35,7 +35,7 @@ export interface HealthInfo {
 
 export interface Swit4Api {
   readonly isDemo: boolean;
-  listServers(params?: { country?: string | undefined; protocol?: string | undefined; cursor?: string }): Promise<ApiResult<Paginated<Server>>> | undefined;
+  listServers(params?: { country?: string | undefined; protocol?: string | undefined; cursor?: string }): Promise<ApiResult<Paginated<Server>>>;
   listCountries(): Promise<ApiResult<Country[]>>;
   listSubscriptions(): Promise<ApiResult<Subscription[]>>;
   createSubscription(input: CreateSubscriptionInput): Promise<ApiResult<Subscription>>;
