@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as ScanRouteImport } from './routes/scan'
 import { Route as ServersRouteImport } from './routes/servers'
 import { Route as ServerIdRouteImport } from './routes/server.$id'
 import { Route as ServersIndexRouteImport } from './routes/servers.index'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScanRoute = ScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServersRoute = ServersRouteImport.update({
@@ -50,6 +56,7 @@ const ServersCountryRoute = ServersCountryRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/scan': typeof ScanRoute
   '/servers': typeof ServersRouteWithChildren
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/scan': typeof ScanRoute
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
   '/servers': typeof ServersIndexRoute
@@ -66,6 +74,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/scan': typeof ScanRoute
   '/servers': typeof ServersRouteWithChildren
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
@@ -76,16 +85,24 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/onboarding'
+    | '/scan'
     | '/servers'
     | '/server/$id'
     | '/servers/$country'
     | '/servers/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/onboarding' | '/server/$id' | '/servers/$country' | '/servers'
+  to:
+    | '/'
+    | '/onboarding'
+    | '/scan'
+    | '/server/$id'
+    | '/servers/$country'
+    | '/servers'
   id:
     | '__root__'
     | '/'
     | '/onboarding'
+    | '/scan'
     | '/servers'
     | '/server/$id'
     | '/servers/$country'
@@ -95,6 +112,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OnboardingRoute: typeof OnboardingRoute
+  ScanRoute: typeof ScanRoute
   ServersRoute: typeof ServersRouteWithChildren
   ServerIdRoute: typeof ServerIdRoute
 }
@@ -113,6 +131,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scan': {
+      id: '/scan'
+      path: '/scan'
+      fullPath: '/scan'
+      preLoaderRoute: typeof ScanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/servers': {
@@ -162,6 +187,7 @@ const ServersRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OnboardingRoute: OnboardingRoute,
+  ScanRoute: ScanRoute,
   ServersRoute: ServersRouteWithChildren,
   ServerIdRoute: ServerIdRoute,
 }
