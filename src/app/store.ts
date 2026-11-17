@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { EMPTY_CATALOG_STATE, type CatalogSourceState } from "@/types/catalog";
 import type {
   AppEvent,
   AppRoutingConfig,
@@ -41,6 +42,8 @@ export interface AppState {
   settings: AppSettings;
   servers: Server[];
   subscriptions: Subscription[];
+  /** Состояние встроенного каталога источников (по id источника). */
+  catalog: Record<string, CatalogSourceState>;
   favorites: string[];
   /** id последнего сервера, к которому удалось подключиться (резервный профиль). */
   lastWorkingServerId: string | null;
@@ -81,6 +84,7 @@ export interface AppState {
   addSubscription: (sub: Subscription) => void;
   updateSubscription: (id: string, patch: Partial<Subscription>) => void;
   removeSubscription: (id: string) => void;
+  patchCatalog: (id: string, patch: Partial<CatalogSourceState>) => void;
 
   setRouting: (patch: Partial<AppRoutingConfig>) => void;
   setDomainRules: (rules: DomainRule[]) => void;
@@ -108,6 +112,7 @@ export const useAppStore = create<AppState>()(
       settings: DEFAULT_SETTINGS,
       servers: [],
       subscriptions: [],
+      catalog: {},
       favorites: [],
       lastWorkingServerId: null,
       routing: DEFAULT_ROUTING,
@@ -142,6 +147,13 @@ export const useAppStore = create<AppState>()(
           servers.forEach((x) => map.set(x.id, { ...map.get(x.id), ...x }));
           return { servers: [...map.values()] };
         }),
+      patchCatalog: (id, patch) =>
+        set((s) => ({
+          catalog: {
+            ...s.catalog,
+            [id]: { ...EMPTY_CATALOG_STATE, ...s.catalog[id], ...patch },
+          },
+        })),
       updateServer: (id, patch) =>
         set((s) => ({ servers: s.servers.map((x) => (x.id === id ? { ...x, ...patch } : x)) })),
       removeServers: (ids) => {
@@ -275,6 +287,7 @@ export const useAppStore = create<AppState>()(
         settings: s.settings,
         servers: s.servers,
         subscriptions: s.subscriptions,
+        catalog: s.catalog,
         favorites: s.favorites,
         lastWorkingServerId: s.lastWorkingServerId,
         routing: s.routing,
