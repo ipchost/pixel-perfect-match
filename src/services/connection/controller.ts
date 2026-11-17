@@ -181,14 +181,12 @@ export async function connect(opts: { serverId?: string } = {}) {
         appliedAt: new Date().toISOString(),
       },
     });
-    useAppStore
-      .getState()
-      .addEvent({
-        level: "success",
-        category: "connection",
-        message: `Подключено: ${server.name}`,
-        isDemo: bridge.isDemo,
-      });
+    useAppStore.getState().addEvent({
+      level: "success",
+      category: "connection",
+      message: `Подключено: ${server.name}`,
+      isDemo: bridge.isDemo,
+    });
   } catch (e) {
     unsubTraffic?.();
     unsubPhase?.();
@@ -240,14 +238,12 @@ export async function disconnect() {
     });
   }
   useAppStore.getState().setConnection({ ...INITIAL_CONNECTION });
-  useAppStore
-    .getState()
-    .addEvent({
-      level: "info",
-      category: "connection",
-      message: "Отключено пользователем",
-      isDemo: bridge.isDemo,
-    });
+  useAppStore.getState().addEvent({
+    level: "info",
+    category: "connection",
+    message: "Отключено пользователем",
+    isDemo: bridge.isDemo,
+  });
 }
 
 export function isBusy(phase: string) {

@@ -34,14 +34,12 @@ export function buildDiagnosticReport(
       configCount: x.configCount,
       lastError: x.lastError ? maskSecrets(x.lastError) : null,
     })),
-    recentEvents: s.events
-      .slice(0, 50)
-      .map((e) => ({
-        at: e.at,
-        level: e.level,
-        category: e.category,
-        message: maskSecrets(e.message),
-      })),
+    recentEvents: s.events.slice(0, 50).map((e) => ({
+      at: e.at,
+      level: e.level,
+      category: e.category,
+      message: maskSecrets(e.message),
+    })),
   };
   return JSON.stringify(report, null, 2);
 }

@@ -70,13 +70,11 @@ function toServers(
 }
 
 function lineErrors(parsed: BatchParseResult): SubscriptionLineError[] {
-  return parsed.errors
-    .slice(0, 50)
-    .map((e) => ({
-      line: e.line,
-      preview: maskSecrets(e.preview),
-      reason: e.result.ok ? "" : e.result.reason,
-    }));
+  return parsed.errors.slice(0, 50).map((e) => ({
+    line: e.line,
+    preview: maskSecrets(e.preview),
+    reason: e.result.ok ? "" : e.result.reason,
+  }));
 }
 
 export interface ImportOutcome {
@@ -183,14 +181,12 @@ export function importAsLocalSource(
 export async function addUrlSubscription(name: string, url: string, intervalMin: number) {
   const sub = makeSubscription(name, url, intervalMin);
   useAppStore.getState().addSubscription(sub);
-  useAppStore
-    .getState()
-    .addEvent({
-      level: "info",
-      category: "subscription",
-      message: `Добавлена подписка «${sub.name}» (${maskUrl(url)})`,
-      isDemo: false,
-    });
+  useAppStore.getState().addEvent({
+    level: "info",
+    category: "subscription",
+    message: `Добавлена подписка «${sub.name}» (${maskUrl(url)})`,
+    isDemo: false,
+  });
   await refreshSubscription(sub.id);
   return sub;
 }
@@ -246,13 +242,11 @@ export async function refreshSubscription(id: string) {
           ...sub.history,
         ].slice(0, 30),
       });
-      useAppStore
-        .getState()
-        .addEvent({
-          level: "success",
-          category: "subscription",
-          message: `Подписка «${sub.name}» обновлена (+${res.data.added} / −${res.data.removed})`,
-        });
+      useAppStore.getState().addEvent({
+        level: "success",
+        category: "subscription",
+        message: `Подписка «${sub.name}» обновлена (+${res.data.added} / −${res.data.removed})`,
+      });
       return;
     }
     const body = await fetchBody(sub.url);
@@ -295,14 +289,12 @@ export async function refreshSubscription(id: string) {
         ...sub.history,
       ].slice(0, 30),
     });
-    useAppStore
-      .getState()
-      .addEvent({
-        level: "success",
-        category: "subscription",
-        message: `Подписка «${sub.name}» обновлена: ${outcome.total} конфигураций`,
-        isDemo: false,
-      });
+    useAppStore.getState().addEvent({
+      level: "success",
+      category: "subscription",
+      message: `Подписка «${sub.name}» обновлена: ${outcome.total} конфигураций`,
+      isDemo: false,
+    });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     const human =
@@ -316,14 +308,12 @@ export async function refreshSubscription(id: string) {
               ? msg
               : "Браузер не смог загрузить источник (CORS или сеть). В Android-версии и через backend загрузка выполняется без этого ограничения. Используйте импорт TXT.";
     useAppStore.getState().updateSubscription(id, { status: "error", lastError: human });
-    useAppStore
-      .getState()
-      .addEvent({
-        level: "error",
-        category: "subscription",
-        message: `Ошибка обновления «${sub.name}»: ${maskSecrets(human)}`,
-        isDemo: sub.isDemo,
-      });
+    useAppStore.getState().addEvent({
+      level: "error",
+      category: "subscription",
+      message: `Ошибка обновления «${sub.name}»: ${maskSecrets(human)}`,
+      isDemo: sub.isDemo,
+    });
   } finally {
     inFlight.delete(id);
   }
