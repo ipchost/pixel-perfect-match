@@ -28,3 +28,10 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## SWIT4 project rules
+- Single client store in `src/app/store.ts`; features add actions under `src/features/<feature>/` instead of new stores — avoids duplicated state.
+- Device capabilities (VPN, installed apps, Xray, share, diagnostics) go only through `getBridge()` from `src/services/native` — keeps the web demo and native Android swappable.
+- Every measured value carries its probe method; throughput stays `null` unless a test ran — product honesty requirement.
+- Screen text uses `useL()(ru, en)` or `useT()` messages; both locales must be filled — RU/EN support.
+- Routes live flat in `src/routes` with dot-named nested paths; `servers`, `subscriptions`, `rules` are Outlet layouts with `.index.tsx` leaves.
