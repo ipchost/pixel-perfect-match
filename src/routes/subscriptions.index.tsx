@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, Info, Plus, RefreshCw } from "lucide-react";
+import { ChevronRight, Info, Library, Plus, RefreshCw } from "lucide-react";
 import { useAppStore } from "@/app/store";
 import { Notice, Screen } from "@/components/swit4/Screen";
 import { DemoBadge } from "@/components/swit4/DemoBadge";
@@ -13,6 +13,7 @@ import { displayUrl, isLocalSource, refreshSubscription } from "@/features/subsc
 import { formatAge } from "@/lib/format";
 import { useT } from "@/localization";
 import { useL } from "@/lib/i18n";
+import { BUILTIN_SOURCES } from "@/data/builtin-sources";
 
 export const Route = createFileRoute("/subscriptions/")({
   head: () => ({
@@ -39,6 +40,9 @@ function SubscriptionsPage() {
   const servers = useAppStore((s) => s.servers);
   const update = useAppStore((s) => s.updateSubscription);
   const [open, setOpen] = useState(false);
+  const enabledCatalog = useAppStore(
+    (s) => Object.values(s.catalog).filter((c) => c.enabled).length,
+  );
   const refreshAll = () =>
     subs
       .filter((s) => s.enabled && !isLocalSource(s))
@@ -64,6 +68,22 @@ function SubscriptionsPage() {
         </>
       }
     >
+      <Link
+        to="/subscriptions/catalog"
+        className="surface-card mb-4 flex items-center gap-3 p-4 transition-colors hover:bg-surface-2"
+      >
+        <Library className="size-5 text-primary" />
+        <div className="min-w-0 flex-1">
+          <div className="font-medium">{L("Встроенный каталог", "Built-in catalogue")}</div>
+          <div className="text-xs text-muted-foreground">
+            {L(
+              `${BUILTIN_SOURCES.length} источников · ${enabledCatalog} включено`,
+              `${BUILTIN_SOURCES.length} sources · ${enabledCatalog} enabled`,
+            )}
+          </div>
+        </div>
+        <ChevronRight className="size-4 text-muted-foreground" />
+      </Link>
       {subs.length === 0 ? (
         <EmptyState
           kind="subscriptions"

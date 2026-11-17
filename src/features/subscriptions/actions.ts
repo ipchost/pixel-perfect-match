@@ -2,7 +2,6 @@ import { useAppStore } from "@/app/store";
 import { getApi } from "@/services/api";
 import { dedupKey, parseBatch, type BatchParseResult } from "@/services/parsers/uri";
 import { maskSecrets, maskUrl } from "@/services/parsers/mask";
-import { guessCountry } from "@/mocks/countries";
 import { hashString, uid } from "@/lib/random";
 import type { Server, Subscription, SubscriptionLineError } from "@/types";
 
@@ -54,7 +53,8 @@ function toServers(
     const server: Server = {
       id: serverIdFor(key),
       name: name || config.address,
-      countryCode: guessCountry(name),
+      // Страна определяется только GeoIP по IP endpoint (backend/native); по имени не угадываем.
+      countryCode: "XX",
       city: "",
       config,
       subscriptionId,
@@ -191,7 +191,7 @@ export async function addUrlSubscription(name: string, url: string, intervalMin:
   return sub;
 }
 
-async function fetchBody(url: string): Promise<string> {
+export async function fetchBody(url: string): Promise<string> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 12_000);
   try {

@@ -5,3 +5,4 @@ export * from "./routing";
 export * from "./events";
 export * from "./scan";
 export * from "./settings";
+export * from "./catalog";
