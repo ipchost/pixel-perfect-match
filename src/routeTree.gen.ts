@@ -11,9 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as RulesRouteImport } from './routes/rules'
 import { Route as ScanRouteImport } from './routes/scan'
 import { Route as ServersRouteImport } from './routes/servers'
 import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
+import { Route as RulesIndexRouteImport } from './routes/rules.index'
+import { Route as RulesAppsRouteImport } from './routes/rules.apps'
+import { Route as RulesBlacklistRouteImport } from './routes/rules.blacklist'
+import { Route as RulesWhitelistRouteImport } from './routes/rules.whitelist'
 import { Route as ServerIdRouteImport } from './routes/server.$id'
 import { Route as ServersIndexRouteImport } from './routes/servers.index'
 import { Route as ServersCountryRouteImport } from './routes/servers.$country'
@@ -30,6 +35,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RulesRoute = RulesRouteImport.update({
+  id: '/rules',
+  path: '/rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScanRoute = ScanRouteImport.update({
   id: '/scan',
   path: '/scan',
@@ -44,6 +54,26 @@ const SubscriptionsRoute = SubscriptionsRouteImport.update({
   id: '/subscriptions',
   path: '/subscriptions',
   getParentRoute: () => rootRouteImport,
+} as any)
+const RulesIndexRoute = RulesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RulesRoute,
+} as any)
+const RulesAppsRoute = RulesAppsRouteImport.update({
+  id: '/apps',
+  path: '/apps',
+  getParentRoute: () => RulesRoute,
+} as any)
+const RulesBlacklistRoute = RulesBlacklistRouteImport.update({
+  id: '/blacklist',
+  path: '/blacklist',
+  getParentRoute: () => RulesRoute,
+} as any)
+const RulesWhitelistRoute = RulesWhitelistRouteImport.update({
+  id: '/whitelist',
+  path: '/whitelist',
+  getParentRoute: () => RulesRoute,
 } as any)
 const ServerIdRoute = ServerIdRouteImport.update({
   id: '/server/$id',
@@ -74,12 +104,17 @@ const SubscriptionsIdRoute = SubscriptionsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/rules': typeof RulesRouteWithChildren
   '/scan': typeof ScanRoute
   '/servers': typeof ServersRouteWithChildren
   '/subscriptions': typeof SubscriptionsRouteWithChildren
+  '/rules/apps': typeof RulesAppsRoute
+  '/rules/blacklist': typeof RulesBlacklistRoute
+  '/rules/whitelist': typeof RulesWhitelistRoute
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
   '/subscriptions/$id': typeof SubscriptionsIdRoute
+  '/rules/': typeof RulesIndexRoute
   '/servers/': typeof ServersIndexRoute
   '/subscriptions/': typeof SubscriptionsIndexRoute
 }
@@ -87,9 +122,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
   '/scan': typeof ScanRoute
+  '/rules/apps': typeof RulesAppsRoute
+  '/rules/blacklist': typeof RulesBlacklistRoute
+  '/rules/whitelist': typeof RulesWhitelistRoute
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
   '/subscriptions/$id': typeof SubscriptionsIdRoute
+  '/rules': typeof RulesIndexRoute
   '/servers': typeof ServersIndexRoute
   '/subscriptions': typeof SubscriptionsIndexRoute
 }
@@ -97,12 +136,17 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/rules': typeof RulesRouteWithChildren
   '/scan': typeof ScanRoute
   '/servers': typeof ServersRouteWithChildren
   '/subscriptions': typeof SubscriptionsRouteWithChildren
+  '/rules/apps': typeof RulesAppsRoute
+  '/rules/blacklist': typeof RulesBlacklistRoute
+  '/rules/whitelist': typeof RulesWhitelistRoute
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
   '/subscriptions/$id': typeof SubscriptionsIdRoute
+  '/rules/': typeof RulesIndexRoute
   '/servers/': typeof ServersIndexRoute
   '/subscriptions/': typeof SubscriptionsIndexRoute
 }
@@ -111,12 +155,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/onboarding'
+    | '/rules'
     | '/scan'
     | '/servers'
     | '/subscriptions'
+    | '/rules/apps'
+    | '/rules/blacklist'
+    | '/rules/whitelist'
     | '/server/$id'
     | '/servers/$country'
     | '/subscriptions/$id'
+    | '/rules/'
     | '/servers/'
     | '/subscriptions/'
   fileRoutesByTo: FileRoutesByTo
@@ -124,21 +173,30 @@ export interface FileRouteTypes {
     | '/'
     | '/onboarding'
     | '/scan'
+    | '/rules/apps'
+    | '/rules/blacklist'
+    | '/rules/whitelist'
     | '/server/$id'
     | '/servers/$country'
     | '/subscriptions/$id'
+    | '/rules'
     | '/servers'
     | '/subscriptions'
   id:
     | '__root__'
     | '/'
     | '/onboarding'
+    | '/rules'
     | '/scan'
     | '/servers'
     | '/subscriptions'
+    | '/rules/apps'
+    | '/rules/blacklist'
+    | '/rules/whitelist'
     | '/server/$id'
     | '/servers/$country'
     | '/subscriptions/$id'
+    | '/rules/'
     | '/servers/'
     | '/subscriptions/'
   fileRoutesById: FileRoutesById
@@ -146,6 +204,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OnboardingRoute: typeof OnboardingRoute
+  RulesRoute: typeof RulesRouteWithChildren
   ScanRoute: typeof ScanRoute
   ServersRoute: typeof ServersRouteWithChildren
   SubscriptionsRoute: typeof SubscriptionsRouteWithChildren
@@ -168,6 +227,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rules': {
+      id: '/rules'
+      path: '/rules'
+      fullPath: '/rules'
+      preLoaderRoute: typeof RulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/scan': {
       id: '/scan'
       path: '/scan'
@@ -188,6 +254,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/subscriptions'
       preLoaderRoute: typeof SubscriptionsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/rules/': {
+      id: '/rules/'
+      path: '/'
+      fullPath: '/rules/'
+      preLoaderRoute: typeof RulesIndexRouteImport
+      parentRoute: typeof RulesRoute
+    }
+    '/rules/apps': {
+      id: '/rules/apps'
+      path: '/apps'
+      fullPath: '/rules/apps'
+      preLoaderRoute: typeof RulesAppsRouteImport
+      parentRoute: typeof RulesRoute
+    }
+    '/rules/blacklist': {
+      id: '/rules/blacklist'
+      path: '/blacklist'
+      fullPath: '/rules/blacklist'
+      preLoaderRoute: typeof RulesBlacklistRouteImport
+      parentRoute: typeof RulesRoute
+    }
+    '/rules/whitelist': {
+      id: '/rules/whitelist'
+      path: '/whitelist'
+      fullPath: '/rules/whitelist'
+      preLoaderRoute: typeof RulesWhitelistRouteImport
+      parentRoute: typeof RulesRoute
     }
     '/server/$id': {
       id: '/server/$id'
@@ -227,6 +321,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface RulesRouteChildren {
+  RulesAppsRoute: typeof RulesAppsRoute
+  RulesBlacklistRoute: typeof RulesBlacklistRoute
+  RulesWhitelistRoute: typeof RulesWhitelistRoute
+  RulesIndexRoute: typeof RulesIndexRoute
+}
+
+const RulesRouteChildren: RulesRouteChildren = {
+  RulesAppsRoute: RulesAppsRoute,
+  RulesBlacklistRoute: RulesBlacklistRoute,
+  RulesWhitelistRoute: RulesWhitelistRoute,
+  RulesIndexRoute: RulesIndexRoute,
+}
+
+const RulesRouteWithChildren = RulesRoute._addFileChildren(RulesRouteChildren)
+
 interface ServersRouteChildren {
   ServersCountryRoute: typeof ServersCountryRoute
   ServersIndexRoute: typeof ServersIndexRoute
@@ -257,6 +367,7 @@ const SubscriptionsRouteWithChildren = SubscriptionsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OnboardingRoute: OnboardingRoute,
+  RulesRoute: RulesRouteWithChildren,
   ScanRoute: ScanRoute,
   ServersRoute: ServersRouteWithChildren,
   SubscriptionsRoute: SubscriptionsRouteWithChildren,
