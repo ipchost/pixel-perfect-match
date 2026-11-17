@@ -147,7 +147,7 @@ function ScanPage() {
             aria-hidden
           />
         )}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <div
             className={cn(
               "flex size-14 shrink-0 items-center justify-center rounded-2xl",
