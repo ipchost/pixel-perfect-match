@@ -80,11 +80,11 @@ export function AppShell({ children }: { children: ReactNode }) {
     void hydrateStore();
   }, []);
 
+  const dark = theme === "dark" || (theme === "system" && systemDark);
   useEffect(() => {
-    const dark = theme === "dark" || (theme === "system" && systemDark);
     document.documentElement.classList.toggle("dark", dark);
     document.documentElement.style.colorScheme = dark ? "dark" : "light";
-  }, [theme, systemDark]);
+  }, [dark]);
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -113,7 +113,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     return (
       <MotionConfig reducedMotion={reduced}>
         {children}
-        <Toaster position="top-center" />
+        <Toaster position="top-center" theme={dark ? "dark" : "light"} />
       </MotionConfig>
     );
   }
@@ -197,7 +197,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </nav>
       </div>
       <PermissionDialog />
-      <Toaster position="top-center" />
+      <Toaster position="top-center" theme={dark ? "dark" : "light"} />
     </MotionConfig>
   );
 }
