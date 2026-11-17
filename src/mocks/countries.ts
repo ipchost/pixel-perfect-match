@@ -20,6 +20,8 @@ export const COUNTRIES: Country[] = [
 const byCode = new Map(COUNTRIES.map((c) => [c.code, c]));
 
 export function getCountry(code: string): Country {
+  if (code.toUpperCase() === "XX")
+    return { code: "XX", nameRu: "Неизвестная страна", nameEn: "Unknown country" } as Country;
   return (
     byCode.get(code.toUpperCase()) ?? {
       code: code.toUpperCase(),
