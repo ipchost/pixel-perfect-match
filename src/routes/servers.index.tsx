@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { getCountry } from "@/mocks/countries";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, Download, Globe2, List, Plus, Radar, X } from "lucide-react";
 import { useAppStore } from "@/app/store";
@@ -46,7 +47,7 @@ function ServersPage() {
   const stale = useAppStore((s) => s.settings.scan.staleAfterMin);
   const [view, setView] = useState<"countries" | "list">("countries");
   const [q, setQ] = useState("");
-  const [status, setStatus] = useState<StatusFilter>("all");
+  const [status, setStatus] = useState<StatusFilter>("working");
   const [protocol, setProtocol] = useState<Protocol | "all">("all");
   const [sort, setSort] = useState<SortKey>("rating");
   const [selecting, setSelecting] = useState(false);
@@ -55,8 +56,15 @@ function ServersPage() {
   const statusOptions = useStatusOptions();
 
   const filtered = useMemo(
-    () => sortServers(filterServers(servers, q, status, protocol), sort, stale),
-    [servers, q, status, protocol, sort, stale],
+    () =>
+      sortServers(
+        filterServers(servers, q, status, protocol, stale),
+        sort,
+        stale,
+        (c) => (locale === "en" ? getCountry(c).nameEn : getCountry(c).nameRu),
+        locale,
+      ),
+    [servers, q, status, protocol, sort, stale, locale],
   );
   const groups = useMemo(() => groupByCountry(filtered, locale), [filtered, locale]);
   const toggle = (id: string, v: boolean) =>
@@ -156,6 +164,10 @@ function ServersPage() {
                   { value: "latency", label: L("Задержка", "Latency") },
                   { value: "stability", label: L("Стабильность", "Stability") },
                   { value: "name", label: L("Имя", "Name") },
+                  { value: "country", label: L("Страна А–Я", "Country A–Z") },
+                  { value: "city", label: L("Город", "City") },
+                  { value: "download", label: L("Загрузка", "Download") },
+                  { value: "upload", label: L("Отдача", "Upload") },
                 ]}
               />
               <Button
