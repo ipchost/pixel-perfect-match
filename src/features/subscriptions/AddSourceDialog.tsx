@@ -36,7 +36,7 @@ export function AddSourceDialog({ open, onOpenChange }: { open: boolean; onOpenC
 
   const submitUrl = async () => {
     const v = validateSubscriptionUrl(url);
-    if (!v.ok) { setErr(L(...(REASONS[v.reason] ?? REASONS.invalid!))); return; }
+    if (!v.ok) { setErr(L(...(REASONS[v.reason] ?? REASONS["invalid"]!))); return; }
     if (interval < 5 || interval > 1440) { setErr(L("Интервал: от 5 до 1440 минут", "Interval: 5–1440 minutes")); return; }
     setBusy(true);
     const sub = await addUrlSubscription(name, v.url, interval);

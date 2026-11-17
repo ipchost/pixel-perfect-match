@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as DiagnosticsRouteImport } from './routes/diagnostics'
 import { Route as EventsRouteImport } from './routes/events'
@@ -18,6 +19,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as ScanRouteImport } from './routes/scan'
 import { Route as ServersRouteImport } from './routes/servers'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as StatisticsRouteImport } from './routes/statistics'
 import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
 import { Route as RulesIndexRouteImport } from './routes/rules.index'
@@ -35,6 +37,11 @@ import { Route as SubscriptionsIdRouteImport } from './routes/subscriptions.$id'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompareRoute = CompareRouteImport.update({
@@ -75,6 +82,11 @@ const ScanRoute = ScanRouteImport.update({
 const ServersRoute = ServersRouteImport.update({
   id: '/servers',
   path: '/servers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StatisticsRoute = StatisticsRouteImport.update({
@@ -145,6 +157,7 @@ const SubscriptionsIdRoute = SubscriptionsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/compare': typeof CompareRoute
   '/diagnostics': typeof DiagnosticsRoute
   '/events': typeof EventsRoute
@@ -153,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/rules': typeof RulesRouteWithChildren
   '/scan': typeof ScanRoute
   '/servers': typeof ServersRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/statistics': typeof StatisticsRoute
   '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/rules/apps': typeof RulesAppsRoute
@@ -169,12 +183,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/compare': typeof CompareRoute
   '/diagnostics': typeof DiagnosticsRoute
   '/events': typeof EventsRoute
   '/favorites': typeof FavoritesRoute
   '/onboarding': typeof OnboardingRoute
   '/scan': typeof ScanRoute
+  '/settings': typeof SettingsRoute
   '/statistics': typeof StatisticsRoute
   '/rules/apps': typeof RulesAppsRoute
   '/rules/blacklist': typeof RulesBlacklistRoute
@@ -191,6 +207,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/compare': typeof CompareRoute
   '/diagnostics': typeof DiagnosticsRoute
   '/events': typeof EventsRoute
@@ -199,6 +216,7 @@ export interface FileRoutesById {
   '/rules': typeof RulesRouteWithChildren
   '/scan': typeof ScanRoute
   '/servers': typeof ServersRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/statistics': typeof StatisticsRoute
   '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/rules/apps': typeof RulesAppsRoute
@@ -217,6 +235,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/compare'
     | '/diagnostics'
     | '/events'
@@ -225,6 +244,7 @@ export interface FileRouteTypes {
     | '/rules'
     | '/scan'
     | '/servers'
+    | '/settings'
     | '/statistics'
     | '/subscriptions'
     | '/rules/apps'
@@ -241,12 +261,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/compare'
     | '/diagnostics'
     | '/events'
     | '/favorites'
     | '/onboarding'
     | '/scan'
+    | '/settings'
     | '/statistics'
     | '/rules/apps'
     | '/rules/blacklist'
@@ -262,6 +284,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/compare'
     | '/diagnostics'
     | '/events'
@@ -270,6 +293,7 @@ export interface FileRouteTypes {
     | '/rules'
     | '/scan'
     | '/servers'
+    | '/settings'
     | '/statistics'
     | '/subscriptions'
     | '/rules/apps'
@@ -287,6 +311,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   CompareRoute: typeof CompareRoute
   DiagnosticsRoute: typeof DiagnosticsRoute
   EventsRoute: typeof EventsRoute
@@ -295,6 +320,7 @@ export interface RootRouteChildren {
   RulesRoute: typeof RulesRouteWithChildren
   ScanRoute: typeof ScanRoute
   ServersRoute: typeof ServersRouteWithChildren
+  SettingsRoute: typeof SettingsRoute
   StatisticsRoute: typeof StatisticsRoute
   SubscriptionsRoute: typeof SubscriptionsRouteWithChildren
   ServerIdRoute: typeof ServerIdRoute
@@ -307,6 +333,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compare': {
@@ -363,6 +396,13 @@ declare module '@tanstack/react-router' {
       path: '/servers'
       fullPath: '/servers'
       preLoaderRoute: typeof ServersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/statistics': {
@@ -508,6 +548,7 @@ const SubscriptionsRouteWithChildren = SubscriptionsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   CompareRoute: CompareRoute,
   DiagnosticsRoute: DiagnosticsRoute,
   EventsRoute: EventsRoute,
@@ -516,6 +557,7 @@ const rootRouteChildren: RootRouteChildren = {
   RulesRoute: RulesRouteWithChildren,
   ScanRoute: ScanRoute,
   ServersRoute: ServersRouteWithChildren,
+  SettingsRoute: SettingsRoute,
   StatisticsRoute: StatisticsRoute,
   SubscriptionsRoute: SubscriptionsRouteWithChildren,
   ServerIdRoute: ServerIdRoute,

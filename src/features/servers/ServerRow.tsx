@@ -20,7 +20,7 @@ export function ServerRow({ server, selectable, selected, onSelect, showCountry 
   const toggleFavorite = useAppStore((s) => s.toggleFavorite);
   return (
     <div className={cn("flex items-center gap-3 px-3 py-3 transition-colors", selected && "bg-primary-soft")}>
-      {selectable && <Checkbox checked={selected} onCheckedChange={(v) => onSelect?.(v === true)} aria-label={L(`Выбрать ${server.name}`, `Select ${server.name}`)} />}
+      {selectable && <Checkbox checked={selected ?? false} onCheckedChange={(v) => onSelect?.(v === true)} aria-label={L(`Выбрать ${server.name}`, `Select ${server.name}`)} />}
       {showCountry && <Flag code={server.countryCode} />}
       <Link to="/server/$id" params={{ id: server.id }} className="flex min-w-0 flex-1 items-center gap-3">
         <div className="min-w-0 flex-1">
