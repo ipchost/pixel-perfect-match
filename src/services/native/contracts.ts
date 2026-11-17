@@ -61,15 +61,15 @@ export interface InstalledAppsRepository {
 /** VpnService.Builder.addAllowedApplication / addDisallowedApplication. */
 export interface RoutingManager {
   /** Проверка, что набор пакетов применим (пакеты установлены, режимы не смешаны). */
-  validate(mode: AppRoutingMode, packages: string[]): Promise<{ ok: boolean; missing: string[]; reason?: string }> | undefined;
+  validate(mode: AppRoutingMode, packages: string[]): Promise<{ ok: boolean; missing: string[]; reason?: string }>;
   /** Режим, применённый к текущему туннелю. */
   applied(): Promise<{ mode: AppRoutingMode; packages: string[] } | null>;
 }
 
 /** Android Sharesheet / SAF / Clipboard. */
 export interface ExportManager {
-  copy(text: string, opts?: { sensitive?: boolean | undefined; clearAfterSec?: number | null }): Promise<boolean> | undefined;
-  share(payload: { title: string; text?: string | undefined; fileName?: string | undefined; mime?: string }): Promise<boolean> | undefined;
+  copy(text: string, opts?: { sensitive?: boolean | undefined; clearAfterSec?: number | null }): Promise<boolean>;
+  share(payload: { title: string; text?: string | undefined; fileName?: string | undefined; mime?: string }): Promise<boolean>;
   saveFile(fileName: string, content: string, mime: string): Promise<boolean>;
 }
 
