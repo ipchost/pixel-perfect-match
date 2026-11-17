@@ -33,6 +33,7 @@ import { Route as ServersIndexRouteImport } from './routes/servers.index'
 import { Route as ServersCountryRouteImport } from './routes/servers.$country'
 import { Route as SubscriptionsIndexRouteImport } from './routes/subscriptions.index'
 import { Route as SubscriptionsIdRouteImport } from './routes/subscriptions.$id'
+import { Route as SubscriptionsCatalogRouteImport } from './routes/subscriptions.catalog'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -154,6 +155,11 @@ const SubscriptionsIdRoute = SubscriptionsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => SubscriptionsRoute,
 } as any)
+const SubscriptionsCatalogRoute = SubscriptionsCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => SubscriptionsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
   '/subscriptions/$id': typeof SubscriptionsIdRoute
+  '/subscriptions/catalog': typeof SubscriptionsCatalogRoute
   '/rules/': typeof RulesIndexRoute
   '/servers/': typeof ServersIndexRoute
   '/subscriptions/': typeof SubscriptionsIndexRoute
@@ -200,6 +207,7 @@ export interface FileRoutesByTo {
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
   '/subscriptions/$id': typeof SubscriptionsIdRoute
+  '/subscriptions/catalog': typeof SubscriptionsCatalogRoute
   '/rules': typeof RulesIndexRoute
   '/servers': typeof ServersIndexRoute
   '/subscriptions': typeof SubscriptionsIndexRoute
@@ -227,6 +235,7 @@ export interface FileRoutesById {
   '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
   '/subscriptions/$id': typeof SubscriptionsIdRoute
+  '/subscriptions/catalog': typeof SubscriptionsCatalogRoute
   '/rules/': typeof RulesIndexRoute
   '/servers/': typeof ServersIndexRoute
   '/subscriptions/': typeof SubscriptionsIndexRoute
@@ -255,6 +264,7 @@ export interface FileRouteTypes {
     | '/server/$id'
     | '/servers/$country'
     | '/subscriptions/$id'
+    | '/subscriptions/catalog'
     | '/rules/'
     | '/servers/'
     | '/subscriptions/'
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/server/$id'
     | '/servers/$country'
     | '/subscriptions/$id'
+    | '/subscriptions/catalog'
     | '/rules'
     | '/servers'
     | '/subscriptions'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/server/$id'
     | '/servers/$country'
     | '/subscriptions/$id'
+    | '/subscriptions/catalog'
     | '/rules/'
     | '/servers/'
     | '/subscriptions/'
@@ -496,6 +508,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubscriptionsIdRouteImport
       parentRoute: typeof SubscriptionsRoute
     }
+    '/subscriptions/catalog': {
+      id: '/subscriptions/catalog'
+      path: '/catalog'
+      fullPath: '/subscriptions/catalog'
+      preLoaderRoute: typeof SubscriptionsCatalogRouteImport
+      parentRoute: typeof SubscriptionsRoute
+    }
   }
 }
 
@@ -534,11 +553,13 @@ const ServersRouteWithChildren =
 
 interface SubscriptionsRouteChildren {
   SubscriptionsIdRoute: typeof SubscriptionsIdRoute
+  SubscriptionsCatalogRoute: typeof SubscriptionsCatalogRoute
   SubscriptionsIndexRoute: typeof SubscriptionsIndexRoute
 }
 
 const SubscriptionsRouteChildren: SubscriptionsRouteChildren = {
   SubscriptionsIdRoute: SubscriptionsIdRoute,
+  SubscriptionsCatalogRoute: SubscriptionsCatalogRoute,
   SubscriptionsIndexRoute: SubscriptionsIndexRoute,
 }
 
