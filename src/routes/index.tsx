@@ -43,7 +43,7 @@ function Home() {
   const subs = useAppStore((s) => s.subscriptions);
   const routing = useAppStore((s) => s.routing);
   const unread = useAppStore(selectUnreadEvents);
-  const lastWorking = useAppStore(selectServerById(useAppStore.getState().lastWorkingServerId));
+  const lastWorking = useAppStore((s) => s.servers.find((x) => x.id === s.lastWorkingServerId) ?? null);
   const shownId = conn.serverId ?? (mode === "manual" ? manualId : null);
   const server = useAppStore(selectServerById(shownId));
   const now = useNow(1000);
@@ -94,7 +94,7 @@ function Home() {
             </div>
             <p className="mt-2 text-center text-xs text-muted-foreground">{mode === "auto" ? t.home.modeAutoHint : t.home.modeManualHint}</p>
 
-            <Link to={mode === "manual" || server ? "/servers" : "/servers"} className="surface-card mx-auto mt-4 flex max-w-sm items-center gap-3 p-3.5 hover:bg-surface-2">
+            <Link to="/servers" className="surface-card mx-auto mt-4 flex max-w-sm items-center gap-3 p-3.5 hover:bg-surface-2">
               {server ? (
                 <>
                   <Flag code={server.countryCode} />
