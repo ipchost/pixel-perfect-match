@@ -11,11 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompareRouteImport } from './routes/compare'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as ScanRouteImport } from './routes/scan'
 import { Route as ServersRouteImport } from './routes/servers'
+import { Route as StatisticsRouteImport } from './routes/statistics'
 import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
 import { Route as RulesIndexRouteImport } from './routes/rules.index'
 import { Route as RulesAppsRouteImport } from './routes/rules.apps'
@@ -37,6 +39,11 @@ const IndexRoute = IndexRouteImport.update({
 const CompareRoute = CompareRouteImport.update({
   id: '/compare',
   path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FavoritesRoute = FavoritesRouteImport.update({
@@ -62,6 +69,11 @@ const ScanRoute = ScanRouteImport.update({
 const ServersRoute = ServersRouteImport.update({
   id: '/servers',
   path: '/servers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatisticsRoute = StatisticsRouteImport.update({
+  id: '/statistics',
+  path: '/statistics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SubscriptionsRoute = SubscriptionsRouteImport.update({
@@ -128,11 +140,13 @@ const SubscriptionsIdRoute = SubscriptionsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/events': typeof EventsRoute
   '/favorites': typeof FavoritesRoute
   '/onboarding': typeof OnboardingRoute
   '/rules': typeof RulesRouteWithChildren
   '/scan': typeof ScanRoute
   '/servers': typeof ServersRouteWithChildren
+  '/statistics': typeof StatisticsRoute
   '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/rules/apps': typeof RulesAppsRoute
   '/rules/blacklist': typeof RulesBlacklistRoute
@@ -149,9 +163,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/events': typeof EventsRoute
   '/favorites': typeof FavoritesRoute
   '/onboarding': typeof OnboardingRoute
   '/scan': typeof ScanRoute
+  '/statistics': typeof StatisticsRoute
   '/rules/apps': typeof RulesAppsRoute
   '/rules/blacklist': typeof RulesBlacklistRoute
   '/rules/domains': typeof RulesDomainsRoute
@@ -168,11 +184,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/events': typeof EventsRoute
   '/favorites': typeof FavoritesRoute
   '/onboarding': typeof OnboardingRoute
   '/rules': typeof RulesRouteWithChildren
   '/scan': typeof ScanRoute
   '/servers': typeof ServersRouteWithChildren
+  '/statistics': typeof StatisticsRoute
   '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/rules/apps': typeof RulesAppsRoute
   '/rules/blacklist': typeof RulesBlacklistRoute
@@ -191,11 +209,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/compare'
+    | '/events'
     | '/favorites'
     | '/onboarding'
     | '/rules'
     | '/scan'
     | '/servers'
+    | '/statistics'
     | '/subscriptions'
     | '/rules/apps'
     | '/rules/blacklist'
@@ -212,9 +232,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/compare'
+    | '/events'
     | '/favorites'
     | '/onboarding'
     | '/scan'
+    | '/statistics'
     | '/rules/apps'
     | '/rules/blacklist'
     | '/rules/domains'
@@ -230,11 +252,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/compare'
+    | '/events'
     | '/favorites'
     | '/onboarding'
     | '/rules'
     | '/scan'
     | '/servers'
+    | '/statistics'
     | '/subscriptions'
     | '/rules/apps'
     | '/rules/blacklist'
@@ -252,11 +276,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompareRoute: typeof CompareRoute
+  EventsRoute: typeof EventsRoute
   FavoritesRoute: typeof FavoritesRoute
   OnboardingRoute: typeof OnboardingRoute
   RulesRoute: typeof RulesRouteWithChildren
   ScanRoute: typeof ScanRoute
   ServersRoute: typeof ServersRouteWithChildren
+  StatisticsRoute: typeof StatisticsRoute
   SubscriptionsRoute: typeof SubscriptionsRouteWithChildren
   ServerIdRoute: typeof ServerIdRoute
 }
@@ -275,6 +301,13 @@ declare module '@tanstack/react-router' {
       path: '/compare'
       fullPath: '/compare'
       preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/favorites': {
@@ -310,6 +343,13 @@ declare module '@tanstack/react-router' {
       path: '/servers'
       fullPath: '/servers'
       preLoaderRoute: typeof ServersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/statistics': {
+      id: '/statistics'
+      path: '/statistics'
+      fullPath: '/statistics'
+      preLoaderRoute: typeof StatisticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/subscriptions': {
@@ -449,11 +489,13 @@ const SubscriptionsRouteWithChildren = SubscriptionsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompareRoute: CompareRoute,
+  EventsRoute: EventsRoute,
   FavoritesRoute: FavoritesRoute,
   OnboardingRoute: OnboardingRoute,
   RulesRoute: RulesRouteWithChildren,
   ScanRoute: ScanRoute,
   ServersRoute: ServersRouteWithChildren,
+  StatisticsRoute: StatisticsRoute,
   SubscriptionsRoute: SubscriptionsRouteWithChildren,
   ServerIdRoute: ServerIdRoute,
 }
