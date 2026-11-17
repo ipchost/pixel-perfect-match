@@ -35,3 +35,4 @@ use the editor.
 - Every measured value carries its probe method; throughput stays `null` unless a test ran — product honesty requirement.
 - Screen text uses `useL()(ru, en)` or `useT()` messages; both locales must be filled — RU/EN support.
 - Routes live flat in `src/routes` with dot-named nested paths; `servers`, `subscriptions`, `rules` are Outlet layouts with `.index.tsx` leaves.
+- Built-in subscription catalogue lives in `src/data/builtin-sources.ts`; per-source state is `catalog` in the single store, logic in `src/features/subscriptions/catalog.ts` + pure `classify.ts` — keeps content detection testable.
