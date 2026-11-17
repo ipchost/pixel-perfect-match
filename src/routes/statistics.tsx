@@ -77,7 +77,7 @@ function Stats() {
               {days.map((d) => (
                 <div
                   key={d.date}
-                  className="flex flex-1 flex-col justify-end gap-px"
+                  className="flex h-full flex-1 flex-col justify-end gap-px"
                   title={`${d.date}: ↓${formatBytes(d.bytesDown, locale)} ↑${formatBytes(d.bytesUp, locale)}`}
                 >
                   <span

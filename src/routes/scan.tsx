@@ -178,13 +178,14 @@ function ScanPage() {
             </div>
           </div>
           {running ? (
-            <Button variant="destructive" onClick={cancelScan}>
+            <Button variant="destructive" className="w-full sm:w-auto" onClick={cancelScan}>
               <Square /> {L("Отменить", "Cancel")}
             </Button>
           ) : (
             <Button
               onClick={() => void startScan({ runThroughput: throughput })}
               disabled={candidates.length === 0}
+            className="w-full sm:w-auto"
             >
               <Play /> {scan ? L("Заново", "Again") : L("Начать", "Start")}
             </Button>
