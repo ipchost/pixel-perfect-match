@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useT } from "@/localization";
 
 /**
  * Каркас экрана: заголовок + контент. На телефоне заголовок липкий, на планшете — в общей сетке.
- * `back` — путь для кнопки «Назад» (вложенные экраны).
+ * `back` — родительский раздел (документирует иерархию); кнопка «Назад» идёт по истории, иначе на главную.
  */
 export function Screen({
   title,
@@ -27,17 +27,19 @@ export function Screen({
   wide?: boolean;
 }) {
   const t = useT();
+  const router = useRouter();
   return (
     <div className={cn("mx-auto w-full px-4 pb-28 md:px-8 md:pb-12", wide ? "max-w-6xl" : "max-w-3xl", className)}>
       <header className="sticky top-0 z-20 -mx-4 mb-4 flex min-h-16 items-center gap-2 bg-background/85 px-4 pt-safe backdrop-blur-xl md:static md:mx-0 md:mb-6 md:min-h-20 md:bg-transparent md:px-0 md:backdrop-blur-none">
         {back && (
-          <Link
-            to={back}
+          <button
+            type="button"
+            onClick={() => (window.history.length > 1 ? router.history.back() : void router.navigate({ to: "/" }))}
             aria-label={t.common.back}
             className="-ml-2 inline-flex size-10 items-center justify-center rounded-full text-foreground hover:bg-surface-2"
           >
             <ChevronLeft className="size-5" />
-          </Link>
+          </button>
         )}
         <div className="min-w-0 flex-1 py-3">
           <h1 className="truncate font-display text-xl font-semibold text-foreground md:text-2xl">{title}</h1>

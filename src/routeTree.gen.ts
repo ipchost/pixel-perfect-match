@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as ServersRouteImport } from './routes/servers'
+import { Route as ServerIdRouteImport } from './routes/server.$id'
 import { Route as ServersIndexRouteImport } from './routes/servers.index'
 import { Route as ServersCountryRouteImport } from './routes/servers.$country'
 
@@ -30,6 +31,11 @@ const ServersRoute = ServersRouteImport.update({
   path: '/servers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServerIdRoute = ServerIdRouteImport.update({
+  id: '/server/$id',
+  path: '/server/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServersIndexRoute = ServersIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -45,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
   '/servers': typeof ServersRouteWithChildren
+  '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
   '/servers/': typeof ServersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
   '/servers': typeof ServersIndexRoute
 }
@@ -59,20 +67,27 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
   '/servers': typeof ServersRouteWithChildren
+  '/server/$id': typeof ServerIdRoute
   '/servers/$country': typeof ServersCountryRoute
   '/servers/': typeof ServersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/onboarding' | '/servers' | '/servers/$country' | '/servers/'
+    | '/'
+    | '/onboarding'
+    | '/servers'
+    | '/server/$id'
+    | '/servers/$country'
+    | '/servers/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/onboarding' | '/servers/$country' | '/servers'
+  to: '/' | '/onboarding' | '/server/$id' | '/servers/$country' | '/servers'
   id:
     | '__root__'
     | '/'
     | '/onboarding'
     | '/servers'
+    | '/server/$id'
     | '/servers/$country'
     | '/servers/'
   fileRoutesById: FileRoutesById
@@ -81,6 +96,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OnboardingRoute: typeof OnboardingRoute
   ServersRoute: typeof ServersRouteWithChildren
+  ServerIdRoute: typeof ServerIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -104,6 +120,13 @@ declare module '@tanstack/react-router' {
       path: '/servers'
       fullPath: '/servers'
       preLoaderRoute: typeof ServersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/server/$id': {
+      id: '/server/$id'
+      path: '/server/$id'
+      fullPath: '/server/$id'
+      preLoaderRoute: typeof ServerIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/servers/': {
@@ -140,6 +163,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OnboardingRoute: OnboardingRoute,
   ServersRoute: ServersRouteWithChildren,
+  ServerIdRoute: ServerIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
