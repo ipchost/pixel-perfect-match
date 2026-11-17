@@ -185,7 +185,7 @@ function ScanPage() {
             <Button
               onClick={() => void startScan({ runThroughput: throughput })}
               disabled={candidates.length === 0}
-            className="w-full sm:w-auto"
+              className="w-full sm:w-auto"
             >
               <Play /> {scan ? L("Заново", "Again") : L("Начать", "Start")}
             </Button>
